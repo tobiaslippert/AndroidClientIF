@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
     private RESTServices restInstance;
     Button Download;
     Button MyAssignments;
+    Button Logout;
 
 
     @Override
@@ -42,6 +43,7 @@ public class MainActivity extends Activity {
         restInstance = new RESTServices();
         Download = (Button) findViewById(R.id.bDown);
         MyAssignments = (Button) findViewById(R.id.bMyAss);
+        Logout = (Button) findViewById(R.id.bLog);
 
 
 
@@ -50,8 +52,16 @@ public class MainActivity extends Activity {
             public void onClick(View view){
                 Intent openMyAssignments = new Intent(getApplicationContext(), MyAssignmentsActivity.class);
                 startActivity(openMyAssignments);
-                                          }
-                                     });
+            }
+        });
+
+        //wait until button blog is pressed
+        Logout.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                Intent openLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(openLogin);
+            }
+        });
 
         //waits until Button bDown is pressed
         Download.setOnClickListener(new View.OnClickListener() {
