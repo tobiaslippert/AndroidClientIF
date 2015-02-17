@@ -5,7 +5,7 @@ package com.example.tobias.androidclientif.Entities;
  */
 public class User {
 
-
+    //VAR-declaration
     String userId;
     String userName;
     String email;
