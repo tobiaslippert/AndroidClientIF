@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
                 //Assignment assignment = null;
 
 
-                String input = restInstance.readHerokuServer();
+                String input = restInstance.readHerokuServer("assignment");
 
                 try {
                     JSONArray jArray = new JSONArray(input);

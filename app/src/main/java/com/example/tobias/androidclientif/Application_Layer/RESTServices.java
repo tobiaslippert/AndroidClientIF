@@ -34,14 +34,14 @@ public class RESTServices {
     }
 
     //Read and Access the server
-    public String readHerokuServer() {
+    public String readHerokuServer(String requestValue) {
         StrictMode.ThreadPolicy policy = new StrictMode.
         ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         StringBuilder builder = new StringBuilder();
 
         HttpClient client = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("https://inspection-framework.herokuapp.com/assignment");
+        HttpGet httpGet = new HttpGet("https://inspection-framework.herokuapp.com/"+requestValue);
         try {
             HttpResponse response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
