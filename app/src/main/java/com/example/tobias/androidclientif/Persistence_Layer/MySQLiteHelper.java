@@ -24,6 +24,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String TABLE_TASKS = "tasks";
         public static final String TABLE_USERS = "users";
         public static final String TABLE_INSPECTIONOBJECTS = "inspectionobjects";
+        public static final String TABLE_ATTACHMENTS = "attachments";
 
         //Column names table assignments
         public static final String A_COLUMN_ROWID = "_id";
@@ -36,14 +37,14 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String A_COLUMN_INSPECTIONOBJECT_ID = "inspectionObjectId";
         public static final String A_COLUMN_ISTEMPLATE = "isTemplate";
 
-
         //Column names table tasks
         public static final String T_COLUMN_ROWID = "_id";
         public static final String T_COLUMN_TASKNAME = "taskName";
         public static final String T_COLUMN_DESCRIPTION = "description";
         public static final String T_COLUMN_STATE = "state";
-        public static final String T_TASK_ID = "taskId";
-        public static final String T_PK = "PK";
+        public static final String T_COLUMN_TASK_ID = "taskId";
+        public static final String T_COLUMN_PK = "PK";
+
 
         //Column names table users
         public static final String U_COLUMN_ROWID = "_id";
@@ -64,10 +65,17 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String I_COLUMN_LOCATION = "location";
         public static final String I_COLUMN_CUSTOMERNAME = "customername";
 
+        //Column names table attachments
+        public static final String AT_COLUMN_ROWID = "_id";
+        public static final String AT_COLUMN_ATTACHMENT_ID = "attachmentId";
+        public static final String AT_COLUMN_FILE_TYPE = "fileType";
+        public static final String AT_COLUMN_BINARY_OBJECT = "binaryObject";
+        public static final String AT_COLUMN_FK_TASK_ID = "fkTaskId";
+
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 5;
+        private static final int DATABASE_VERSION = 6;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -78,7 +86,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Task Table creation sql statement
         private static final String CREATE_TABLE_TASKS = "CREATE TABLE "
                 + TABLE_TASKS + "(" + T_COLUMN_ROWID + " INTEGER, " + T_COLUMN_TASKNAME + " TEXT, " + T_COLUMN_DESCRIPTION + " TEXT, "
-                + T_COLUMN_STATE + " INTEGER, " + T_TASK_ID + " TEXT PRIMARY KEY, " + T_PK + " TEXT, " + " FOREIGN KEY(PK) REFERENCES TABLE_ASSIGNMENTS(assignmentId))";
+                + T_COLUMN_STATE + " INTEGER, " + T_COLUMN_TASK_ID + " TEXT PRIMARY KEY, " + T_COLUMN_PK + " TEXT, " + " FOREIGN KEY(PK) REFERENCES TABLE_ASSIGNMENTS(assignmentId))";
 
         //User Table creation sql statement
         private static final String CREATE_TABLE_USERS = "CREATE TABLE "
@@ -91,6 +99,11 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                 + TABLE_INSPECTIONOBJECTS + "(" + I_COLUMN_ROWID + " INTEGER, " + I_COLUMN_OBJECT_ID + " TEXT PRIMARY KEY UNIQUE, " + I_COLUMN_OBJECTNAME + " TEXT, "
                 + I_COLUMN_DESCRIPTION + " TEXT, " + I_COLUMN_LOCATION + " TEXT, " + I_COLUMN_CUSTOMERNAME + " TEXT)";
 
+        //Attachment table creation sql statement
+        private static final String CREATE_TABLE_ATTACHMENTS = "CREATE TABLE "
+                + TABLE_ATTACHMENTS + "(" + AT_COLUMN_ROWID + " INTEGER, " + AT_COLUMN_ATTACHMENT_ID + " TEXT PRIMARY KEY UNIQUE, " + AT_COLUMN_FILE_TYPE + " TEXT, "
+                + AT_COLUMN_BINARY_OBJECT + " TEXT, " + AT_COLUMN_FK_TASK_ID + " TEXT, " + " FOREIGN KEY(fkTaskId) REFERENCES TABLE_TASKS(taskId))";
+
         public MySQLiteHelper(Context context) {
                 super(context, DATABASE_NAME, null, DATABASE_VERSION);
             }
@@ -101,6 +114,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                 database.execSQL(CREATE_TABLE_TASKS);
                 database.execSQL(CREATE_TABLE_USERS);
                 database.execSQL(CREATE_TABLE_INSPECTIONOBJECTS);
+                database.execSQL((CREATE_TABLE_ATTACHMENTS));
             }
 
         @Override
@@ -112,6 +126,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_INSPECTIONOBJECTS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_ATTACHMENTS);
             onCreate(db);
         }
         //create a row User
@@ -158,10 +173,11 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             SQLiteDatabase database = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
+            values.put(MySQLiteHelper.T_COLUMN_TASK_ID, taskId);
             values.put(MySQLiteHelper.T_COLUMN_TASKNAME, taskName);
             values.put(MySQLiteHelper.T_COLUMN_DESCRIPTION, description);
             values.put(MySQLiteHelper.T_COLUMN_STATE, state);
-            values.put(MySQLiteHelper.T_PK, PK);
+            values.put(MySQLiteHelper.T_COLUMN_PK, PK);
 
             long insertId = database.insert(MySQLiteHelper.TABLE_TASKS, null,
                     values);
@@ -181,6 +197,20 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
             long insertId = database.insert(MySQLiteHelper.TABLE_INSPECTIONOBJECTS, null,
                     values);
+        }
+
+        //Create a row attachment
+        public void createAttachment(String attachmentId, String file_type, String binaryObject, String taskId){
+
+            SQLiteDatabase database = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(MySQLiteHelper.AT_COLUMN_ATTACHMENT_ID, attachmentId);
+            values.put(MySQLiteHelper.AT_COLUMN_FILE_TYPE, file_type);
+            values.put(MySQLiteHelper.AT_COLUMN_BINARY_OBJECT, binaryObject);
+            values.put(MySQLiteHelper.AT_COLUMN_FK_TASK_ID, taskId);
+
+            long insertId = database.insert(MySQLiteHelper.TABLE_ATTACHMENTS, null, values);
         }
 
         //get all assignments from the database
@@ -207,6 +237,25 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             }
 
             return listAssignments;
+        }
+
+        //get only one assignment
+        public Assignment getAssignment(String assignmentId){
+            String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_ASSIGNMENTS + " WHERE "
+                    + A_COLUMN_ASSIGNMENT_ID + " = " + assignmentId;
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+
+            Assignment assignment = new Assignment();
+            assignment.setId(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENT_ID))));
+            assignment.setAssignmentName(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENTNAME))));
+            assignment.setDescription((c.getString(c.getColumnIndex(A_COLUMN_DESCRIPTION))));
+            assignment.setStartDate((c.getInt(c.getColumnIndex(A_COLUMN_STARTDATE))));
+            assignment.setDueDate((c.getInt(c.getColumnIndex(A_COLUMN_ENDDATE))));
+            assignment.setIsTemplate((c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE))));
+
+            return assignment;
         }
 
         //get all userName from the local database
