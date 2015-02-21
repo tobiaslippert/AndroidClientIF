@@ -99,13 +99,14 @@ public class LoginActivity extends Activity{
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                String fieldInput;                                                                  //String from the Edittextfield Username (editText1)
-                List<String> compareList = new ArrayList<String>();                                 //list that gets the usernames from the database
-                compareList = datasource.getAllUserNames();                                         //give compareList the usernames from the database
-                fieldInput = editTextUserName.getText().toString();                                 //read the editText1
-                boolean isValid;                                                                    //helpvar, that gets the result of the method isValidUserName
-                if (fieldInput != null) {                                                           //checks that the editText1 is not empty
-                    isValid = isValidUserName(fieldInput, compareList);                             //call the method isValidUserName
+                String fieldInput;
+                List<String> compareList = new ArrayList<String>();
+                compareList = datasource.getAllUserNames();
+                fieldInput = editTextUserName.getText().toString();
+                boolean isValid;
+
+                if (fieldInput != null) {
+                    isValid = isValidUserName(fieldInput, compareList);
 
 
                     if (isValid == true) {                                                          //if isValid is true continue to the menu
@@ -146,7 +147,7 @@ public class LoginActivity extends Activity{
             if (databaseEntry.get(i).equals(fieldEntry)) {
                 return true;
             } else {
-                return false;
+
             }
         }
         return false;

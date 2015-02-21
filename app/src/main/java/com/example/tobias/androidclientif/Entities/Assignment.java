@@ -11,8 +11,10 @@ public class Assignment {
     String description;
     Integer startDate;
     Integer dueDate;
-    Integer userId;
-    Integer inspectionObjectId;
+    String userId;
+    String inspectionObjectId;
+    String isTemplate;
+
 
     //Constructor
     public Assignment(){
@@ -20,6 +22,11 @@ public class Assignment {
     }
 
     //Setter
+
+    public void setIsTemplate(String isTemplate) {
+        this.isTemplate = isTemplate;
+    }
+
     public void setAssignmentName(String assignmentName1)
     {
         assignmentName=assignmentName1;
@@ -41,15 +48,20 @@ public class Assignment {
         this.dueDate = dueDate;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public void setInspectionObjectId(Integer inspectionObjectId) {
+    public void setInspectionObjectId(String inspectionObjectId) {
         this.inspectionObjectId = inspectionObjectId;
     }
 
     //Getter
+
+    public String getIsTemplate() {
+        return isTemplate;
+    }
+
     public String getAssignmentName() {
         return assignmentName;
     }
@@ -72,11 +84,11 @@ public class Assignment {
         return dueDate;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public Integer getInspectionObjectId() {
+    public String getInspectionObjectId() {
         return inspectionObjectId;
     }
 
