@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 @SuppressWarnings("unchecked")
 
-
+                //Download all inspectionObjects from ther server
                String inputInspectionObjects = restInstance.readHerokuServer("inspectionobjects");
 
                 try {
@@ -105,12 +105,14 @@ public class MainActivity extends Activity {
                         customerName = insOb.getCustomerName();
                         location = insOb.getLocation();
 
+                        //store all inspectionObjects into the database
                         datasource.createInspectionObject(objectId, objectName, objectDescription,location,customerName);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                //Download all asignments from the server
                 String inputAssignment = restInstance.readHerokuServer("assignment");
 
                 try {
@@ -144,6 +146,7 @@ public class MainActivity extends Activity {
                         endDate = ass.getDueDate();
                         isTemplate = ass.getIsTemplate();
 
+                        //Download all tasks assigned to an assignment from the server
                         //jArrayTask gets the SubJSONObject "tasks"
                         JSONArray jArrayTask = new JSONArray(jObject.get("tasks").toString());
 
@@ -165,6 +168,7 @@ public class MainActivity extends Activity {
                             taskDescription = task.getDescription();
                             taskState = task.getState();
 
+                            //Store all assigned tasks into the database
                             datasource.createTask(taskId, taskName, taskDescription, taskState, id);
                         }
 
@@ -180,7 +184,7 @@ public class MainActivity extends Activity {
                         String userId;
                         userId = user.getUserId();
 
-
+                        //Store all assignments into the database
                         datasource.createAssignment(id, assignmentName, description, startDate, endDate, objectId,userId, isTemplate);
 
                     }

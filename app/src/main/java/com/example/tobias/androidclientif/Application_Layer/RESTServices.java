@@ -73,7 +73,43 @@ public class RESTServices {
 
     }
 
-    public void writeToHerokuServer(String uri, String jsonObject){
+    public void postToHerokuServer(String uri, String jsonObject){
+        JSONObject jO;
+
+        //Allow internet connection
+        StrictMode.ThreadPolicy policy = new StrictMode.
+        ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("https://inspection-framework.herokuapp.com/"+uri);
+
+        //Create a new JSONObject from the given String
+        try {
+            jO = new JSONObject(jsonObject);
+            //passes the results to a string builder/entity
+            try {
+                StringEntity se = new StringEntity(jO.toString());
+                httpPost.setEntity(se);
+                //sets a request header so the page receving the request
+                //will know what to do with it
+                httpPost.setHeader("Accept", "application/json");
+                httpPost.setHeader("Content-type", "application/json");
+                try {
+                    httpClient.execute(httpPost);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void putToHerokuServer(String uri, String jsonObject){
         JSONObject jO;
 
         //Allow internet connection
