@@ -27,6 +27,12 @@
             android:label="@string/app_name" >
 
         </activity>
+
+        <activity
+            android:name=".Presentation_Layer.AssTasksActivity"
+            android:label="@string/app_name">
+        </activity>
+
     </application>
 
 </manifest>

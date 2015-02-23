@@ -13,6 +13,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
  import com.example.tobias.androidclientif.Entities.Assignment;
  import com.example.tobias.androidclientif.Entities.User;
+ import com.example.tobias.androidclientif.Entities.Task;
 
  import java.util.ArrayList;
  import java.util.List;
@@ -282,6 +283,30 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             }
 
             return listUserNames;
+        }
+
+        public List<String> getAllTasks() {
+            List<String> tasks = new ArrayList<String>();
+            String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_TASKS;
+
+
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    Task task = new Task();
+                    task.setTaskName(c.getString((c.getColumnIndex(T_COLUMN_TASKNAME))));
+
+
+                    // adding to assignment list
+                    tasks.add(task.getTaskName());
+                } while (c.moveToNext());
+            }
+
+            return tasks;
         }
 
         // closing database
