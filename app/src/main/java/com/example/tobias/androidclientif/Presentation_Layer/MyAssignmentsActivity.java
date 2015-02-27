@@ -2,9 +2,12 @@ package com.example.tobias.androidclientif.Presentation_Layer;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.content.Intent;
 
 import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
@@ -43,6 +46,14 @@ public class MyAssignmentsActivity extends Activity {
 
         ListAdapter listenAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOutput);
         listViewMyAss.setAdapter(listenAdapter);
+        listViewMyAss.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent openAssTask = new Intent(getApplicationContext(), AssTasksActivity.class);
+                startActivity(openAssTask);
+            }
+        });
+
 
     }
 }
