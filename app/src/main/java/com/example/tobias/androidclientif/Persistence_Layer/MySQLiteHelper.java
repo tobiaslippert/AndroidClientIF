@@ -12,6 +12,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
  import android.util.Log;
 
  import com.example.tobias.androidclientif.Entities.Assignment;
+ import com.example.tobias.androidclientif.Entities.InspectionObject;
  import com.example.tobias.androidclientif.Entities.User;
  import com.example.tobias.androidclientif.Entities.Task;
 
@@ -240,23 +241,40 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             return listAssignments;
         }
 
-        //get only one assignment
-        public Assignment getAssignment(String assignmentId){
-            String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_ASSIGNMENTS + " WHERE "
-                    + A_COLUMN_ASSIGNMENT_ID + " = " + assignmentId;
+        // Get assignment with given assignment ID
+        public Assignment getAssignmentById(String assignmentId) {
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_ASSIGNMENTS + " WHERE " + A_COLUMN_ASSIGNMENT_ID + " = " + "'" + assignmentId + "'";
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
-
+            c.moveToFirst();
 
             Assignment assignment = new Assignment();
-            assignment.setId(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENT_ID))));
+            assignment.setId(c.getString(c.getColumnIndex(A_COLUMN_ASSIGNMENT_ID)));
             assignment.setAssignmentName(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENTNAME))));
-            assignment.setDescription((c.getString(c.getColumnIndex(A_COLUMN_DESCRIPTION))));
-            assignment.setStartDate((c.getInt(c.getColumnIndex(A_COLUMN_STARTDATE))));
-            assignment.setDueDate((c.getInt(c.getColumnIndex(A_COLUMN_ENDDATE))));
-            assignment.setIsTemplate((c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE))));
+            assignment.setDescription(c.getString(c.getColumnIndex(A_COLUMN_DESCRIPTION)));
+            assignment.setStartDate(c.getInt(c.getColumnIndex(A_COLUMN_STARTDATE)));
+            assignment.setDueDate(c.getInt(c.getColumnIndex(A_COLUMN_ENDDATE)));
+            assignment.setIsTemplate(c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE)));
+            assignment.setUserId(c.getString(c.getColumnIndex(A_COLUMN_USER_ID)));
 
+            db.close();
             return assignment;
+        }
+
+        //Get inspectionObject with given object ID
+        public InspectionObject getInspectionObjectById(String inspectionObjectId) {
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_INSPECTIONOBJECTS + " WHERE " + I_COLUMN_OBJECT_ID + " = " + "'" + inspectionObjectId + "'";
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            c.moveToFirst();
+
+            InspectionObject inspectionObject = new InspectionObject();
+            inspectionObject.setId(c.getString(c.getColumnIndex(I_COLUMN_OBJECT_ID)));
+            inspectionObject.setObjectName(c.getString((c.getColumnIndex(I_COLUMN_OBJECTNAME))));
+            inspectionObject.setDescription(c.getString(c.getColumnIndex(I_COLUMN_DESCRIPTION)));
+            inspectionObject.setCustomerName(c.getString(c.getColumnIndex(I_COLUMN_CUSTOMERNAME)));
+            inspectionObject.setLocation(c.getString(c.getColumnIndex(I_COLUMN_LOCATION)));
+            return inspectionObject;
         }
 
         //get all userName from the local database
@@ -307,6 +325,31 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             }
 
             return tasks;
+        }
+
+        public List<Task> getTasksByAssignmentId(String assignmentId) {
+            List<Task> taskList = new ArrayList<Task>();
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_TASKS + " WHERE " + T_COLUMN_PK + " = " + "'" + assignmentId + "'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    Task task = new Task();
+                    task.setId(c.getString((c.getColumnIndex(T_COLUMN_TASK_ID))));
+                    task.setTaskName(c.getString((c.getColumnIndex(T_COLUMN_TASKNAME))));
+                    task.setDescription(c.getString((c.getColumnIndex(T_COLUMN_DESCRIPTION))));
+                    task.setState(c.getInt(c.getColumnIndex(T_COLUMN_STATE)));
+                    task.setAssignmentId(c.getString(c.getColumnIndex(T_COLUMN_PK)));
+
+                    // adding to task list
+                    taskList.add(task);
+                } while (c.moveToNext());
+            }
+            db.close();
+            return taskList;
         }
 
         // closing database

@@ -10,6 +10,7 @@ public class Task {
     String taskName;
     String description;
     Integer state;
+    String assignmentId;
 
     //Constructor
     public Task(){
@@ -17,6 +18,12 @@ public class Task {
 
 
     //Setter
+
+
+    public void setAssignmentId(String assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
     public void setId(String id1){
         id=id1;
     }
@@ -34,6 +41,12 @@ public class Task {
     }
 
     //Getter
+
+
+    public String getAssignmentId() {
+        return assignmentId;
+    }
+
     public String getId() {
         return id;
     }
