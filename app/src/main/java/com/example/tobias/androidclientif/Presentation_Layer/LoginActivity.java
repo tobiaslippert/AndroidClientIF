@@ -64,26 +64,7 @@ public class LoginActivity extends Activity{
                 user.setPhoneNumber(jObject.get("phoneNumber").toString());
                 user.setMobileNumber(jObject.get("mobileNumber").toString());
 
-                String userId;
-                String userName;
-                String firstName;
-                String lastName;
-                String role;
-                String emailAddress;
-                String phoneNumber;
-                String mobileNumber;
-
-
-                userId = user.getUserId();
-                userName = user.getUserName();
-                firstName = user.getFirstName();
-                lastName = user.getLastName();
-                role = user.getRole();
-                emailAddress = user.getEmail();
-                phoneNumber = user.getPhoneNumber();
-                mobileNumber = user.getMobileNumber();
-
-                datasource.createUser(userId, userName, firstName, lastName, role, emailAddress, phoneNumber, mobileNumber);
+                datasource.createUser(user);
                 System.out.println(user.getUserName());
             }
 
@@ -100,10 +81,11 @@ public class LoginActivity extends Activity{
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 String fieldInput;
-                List<String> compareList = new ArrayList<String>();
+                List<User> compareList = new ArrayList<>();
                 compareList = datasource.getAllUserNames();
                 fieldInput = editTextUserName.getText().toString();
                 boolean isValid;
+
 
                 if (fieldInput != null) {
                     isValid = isValidUserName(fieldInput, compareList);
@@ -141,10 +123,11 @@ public class LoginActivity extends Activity{
     //Compares a String with the entries of a List<String> in order to check, whether the String appears in the list
     //Returns true if the String appears in the list
     //Returns false if the string is not in the list
-    public boolean isValidUserName(String fieldEntry, List<String> databaseEntry) {
+    public boolean isValidUserName(String fieldEntry, List<User> databaseEntry) {
 
         for (int i = 0; i < databaseEntry.size(); i++) {
-            if (databaseEntry.get(i).equals(fieldEntry)) {
+            String userName = databaseEntry.get(i).getUserName();
+            if (userName.equals(fieldEntry)) {
                 return true;
             } else {
 

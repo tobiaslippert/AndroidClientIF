@@ -12,6 +12,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
  import android.util.Log;
 
  import com.example.tobias.androidclientif.Entities.Assignment;
+ import com.example.tobias.androidclientif.Entities.Attachment;
  import com.example.tobias.androidclientif.Entities.InspectionObject;
  import com.example.tobias.androidclientif.Entities.User;
  import com.example.tobias.androidclientif.Entities.Task;
@@ -73,11 +74,12 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String AT_COLUMN_FILE_TYPE = "fileType";
         public static final String AT_COLUMN_BINARY_OBJECT = "binaryObject";
         public static final String AT_COLUMN_FK_TASK_ID = "fkTaskId";
+        public static final String AT_COLUMN_FK_ASSIGNMENT_ID = "fkAssignmentId";
 
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 6;
+        private static final int DATABASE_VERSION = 7;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -104,7 +106,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Attachment table creation sql statement
         private static final String CREATE_TABLE_ATTACHMENTS = "CREATE TABLE "
                 + TABLE_ATTACHMENTS + "(" + AT_COLUMN_ROWID + " INTEGER, " + AT_COLUMN_ATTACHMENT_ID + " TEXT PRIMARY KEY UNIQUE, " + AT_COLUMN_FILE_TYPE + " TEXT, "
-                + AT_COLUMN_BINARY_OBJECT + " TEXT, " + AT_COLUMN_FK_TASK_ID + " TEXT, " + " FOREIGN KEY(fkTaskId) REFERENCES TABLE_TASKS(taskId))";
+                + AT_COLUMN_BINARY_OBJECT + " TEXT, " + AT_COLUMN_FK_TASK_ID + " TEXT, " + " FOREIGN KEY(fkTaskId) REFERENCES TABLE_TASKS(taskId)), " + AT_COLUMN_FK_ASSIGNMENT_ID + " TEXT, " + " FOREIGN KEY(fkAssignmentId) REFERENCES TABLE_ASSIGNMENTS(assignmentId))";
 
         public MySQLiteHelper(Context context) {
                 super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -131,38 +133,38 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ATTACHMENTS);
             onCreate(db);
         }
-        //create a row User
-        public void createUser(String userId, String userName, String firstname, String lastname, String role, String email, String phoneNumber, String mobileNumber){
 
+        //Create Methods are coded here
+        //create a row User
+        public void createUser(User user){
             SQLiteDatabase database = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MySQLiteHelper.U_COLUMN_USER_ID, userId);
-            values.put(MySQLiteHelper.U_COLUMN_USERNAME, userName);
-            values.put(MySQLiteHelper.U_COLUMN_FIRSTNAME, firstname);
-            values.put(MySQLiteHelper.U_COLUMN_LASTNAME, lastname);
-            values.put(MySQLiteHelper.U_COLUMN_ROLE, role);
-            values.put(MySQLiteHelper.U_COLUMN_EMAIL, email);
-            values.put(MySQLiteHelper.U_COLUMN_MOBILENUMBER, mobileNumber);
-            values.put(MySQLiteHelper.U_COLUMN_PHONENUMBER, phoneNumber);
+            values.put(MySQLiteHelper.U_COLUMN_USER_ID, user.getUserId());
+            values.put(MySQLiteHelper.U_COLUMN_USERNAME, user.getUserName());
+            values.put(MySQLiteHelper.U_COLUMN_FIRSTNAME, user.getFirstName());
+            values.put(MySQLiteHelper.U_COLUMN_LASTNAME, user.getLastName());
+            values.put(MySQLiteHelper.U_COLUMN_ROLE, user.getRole());
+            values.put(MySQLiteHelper.U_COLUMN_EMAIL, user.getEmail());
+            values.put(MySQLiteHelper.U_COLUMN_MOBILENUMBER, user.getMobileNumber());
+            values.put(MySQLiteHelper.U_COLUMN_PHONENUMBER, user.getPhoneNumber());
 
             long insertId = database.insert(MySQLiteHelper.TABLE_USERS, null, values);
         }
 
         //create a row Assignment
-        public void createAssignment(String assignmentId, String assignmentName, String description, Integer startDate, Integer endDate, String objectId, String userId, String isTemplate) {
-
+        public void createAssignment(Assignment assignment){
             SQLiteDatabase database = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MySQLiteHelper.A_COLUMN_DESCRIPTION, description);
-            values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENTNAME, assignmentName);
-            values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENT_ID, assignmentId);
-            values.put(MySQLiteHelper.A_COLUMN_STARTDATE, startDate);
-            values.put(MySQLiteHelper.A_COLUMN_ENDDATE, endDate);
-            values.put(MySQLiteHelper.A_COLUMN_ISTEMPLATE, isTemplate);
-            values.put(MySQLiteHelper.A_COLUMN_INSPECTIONOBJECT_ID, objectId);
-            values.put(MySQLiteHelper.A_COLUMN_USER_ID, userId);
+            values.put(MySQLiteHelper.A_COLUMN_DESCRIPTION, assignment.getDescription());
+            values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENTNAME, assignment.getAssignmentName());
+            values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENT_ID, assignment.getId());
+            values.put(MySQLiteHelper.A_COLUMN_STARTDATE, assignment.getStartDate());
+            values.put(MySQLiteHelper.A_COLUMN_ENDDATE, assignment.getDueDate());
+            values.put(MySQLiteHelper.A_COLUMN_ISTEMPLATE, assignment.getIsTemplate());
+            values.put(MySQLiteHelper.A_COLUMN_INSPECTIONOBJECT_ID, assignment.getInspectionObjectId());
+            values.put(MySQLiteHelper.A_COLUMN_USER_ID, assignment.getUserId());
 
             //insert row
             long insertId = database.insert(MySQLiteHelper.TABLE_ASSIGNMENTS, null,
@@ -170,53 +172,55 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         }
 
         //Create a row Task
-        public void createTask(String taskId, String taskName, String description, Integer state, String PK ){
+        public void createTask(Task task){
 
             SQLiteDatabase database = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MySQLiteHelper.T_COLUMN_TASK_ID, taskId);
-            values.put(MySQLiteHelper.T_COLUMN_TASKNAME, taskName);
-            values.put(MySQLiteHelper.T_COLUMN_DESCRIPTION, description);
-            values.put(MySQLiteHelper.T_COLUMN_STATE, state);
-            values.put(MySQLiteHelper.T_COLUMN_PK, PK);
+            values.put(MySQLiteHelper.T_COLUMN_TASK_ID, task.getId());
+            values.put(MySQLiteHelper.T_COLUMN_TASKNAME, task.getTaskName());
+            values.put(MySQLiteHelper.T_COLUMN_DESCRIPTION, task.getDescription());
+            values.put(MySQLiteHelper.T_COLUMN_STATE, task.getState());
+            values.put(MySQLiteHelper.T_COLUMN_PK, task.getAssignmentId());
 
             long insertId = database.insert(MySQLiteHelper.TABLE_TASKS, null,
                     values);
         }
 
         //Create a row InspectionObject
-        public void createInspectionObject(String objectId, String objectName, String description, String location, String customerName){
-
+        public void createInspectionObject(InspectionObject inspectionObject){
             SQLiteDatabase database = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MySQLiteHelper.I_COLUMN_OBJECT_ID, objectId);
-            values.put(MySQLiteHelper.I_COLUMN_OBJECTNAME, objectName);
-            values.put(MySQLiteHelper.I_COLUMN_DESCRIPTION, description);
-            values.put(MySQLiteHelper.I_COLUMN_LOCATION, location);
-            values.put(MySQLiteHelper.I_COLUMN_CUSTOMERNAME, customerName);
+            values.put(MySQLiteHelper.I_COLUMN_OBJECT_ID, inspectionObject.getId());
+            values.put(MySQLiteHelper.I_COLUMN_OBJECTNAME, inspectionObject.getObjectName());
+            values.put(MySQLiteHelper.I_COLUMN_DESCRIPTION, inspectionObject.getDescription());
+            values.put(MySQLiteHelper.I_COLUMN_LOCATION, inspectionObject.getLocation());
+            values.put(MySQLiteHelper.I_COLUMN_CUSTOMERNAME, inspectionObject.getCustomerName());
 
             long insertId = database.insert(MySQLiteHelper.TABLE_INSPECTIONOBJECTS, null,
                     values);
         }
 
         //Create a row attachment
-        public void createAttachment(String attachmentId, String file_type, String binaryObject, String taskId){
+        public void createAttachment(Attachment attachment){
 
             SQLiteDatabase database = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MySQLiteHelper.AT_COLUMN_ATTACHMENT_ID, attachmentId);
-            values.put(MySQLiteHelper.AT_COLUMN_FILE_TYPE, file_type);
-            values.put(MySQLiteHelper.AT_COLUMN_BINARY_OBJECT, binaryObject);
-            values.put(MySQLiteHelper.AT_COLUMN_FK_TASK_ID, taskId);
+            values.put(MySQLiteHelper.AT_COLUMN_ATTACHMENT_ID, attachment.getId());
+            values.put(MySQLiteHelper.AT_COLUMN_FILE_TYPE, attachment.getFile_type());
+            values.put(MySQLiteHelper.AT_COLUMN_BINARY_OBJECT, attachment.getBinaryObject().toString());
+            values.put(MySQLiteHelper.AT_COLUMN_FK_TASK_ID, attachment.getTaskId());
+            values.put(MySQLiteHelper.AT_COLUMN_FK_ASSIGNMENT_ID, attachment.getAssignmentId());
 
             long insertId = database.insert(MySQLiteHelper.TABLE_ATTACHMENTS, null, values);
         }
 
+        //RUD-Methods for Assignments are coded below
+
         //get all assignments from the database
-        //returns a list with all assignmentNames
+        //returns a list with all assignments
         public List<Assignment> getAllAssignments() {
             List<Assignment> listAssignments = new ArrayList<Assignment>();
             String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_ASSIGNMENTS;
@@ -261,7 +265,35 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             return assignment;
         }
 
-        //Get inspectionObject with given object ID
+        //Update an assignment
+        public int updateAssignment(Assignment assignment) {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(A_COLUMN_ASSIGNMENT_ID, assignment.getId());
+            values.put(A_COLUMN_ASSIGNMENTNAME, assignment.getAssignmentName());
+            values.put(A_COLUMN_DESCRIPTION, assignment.getDescription());
+            values.put(A_COLUMN_ISTEMPLATE, assignment.getIsTemplate());
+            values.put(A_COLUMN_USER_ID, assignment.getUserId());
+            values.put(A_COLUMN_INSPECTIONOBJECT_ID, assignment.getInspectionObjectId());
+            values.put(A_COLUMN_STARTDATE, assignment.getStartDate());
+            values.put(A_COLUMN_ENDDATE, assignment.getDueDate());
+
+            // updating row
+            return db.update(TABLE_ASSIGNMENTS, values, A_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(assignment.getId()) });
+        }
+
+        //Delete an assignment
+        public void deleteAssignment(String assignmentId) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_ASSIGNMENTS, A_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(assignmentId) });
+        }
+
+        //RUD-Methods for inspectionObjects
+
+        //Read inspectionObject with given object ID
         public InspectionObject getInspectionObjectById(String inspectionObjectId) {
             String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_INSPECTIONOBJECTS + " WHERE " + I_COLUMN_OBJECT_ID + " = " + "'" + inspectionObjectId + "'";
             SQLiteDatabase db = this.getReadableDatabase();
@@ -277,14 +309,34 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             return inspectionObject;
         }
 
-        //get all userName from the local database
-        //returns a list with all userNames
-        public List<String> getAllUserNames() {
-            List<String> listUserNames = new ArrayList<String>();
+        //Update an inspectionObject
+        public int updateInspectionObject(InspectionObject inspectionObject){
+            SQLiteDatabase database = this.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(MySQLiteHelper.I_COLUMN_OBJECT_ID, inspectionObject.getId());
+            values.put(MySQLiteHelper.I_COLUMN_OBJECTNAME, inspectionObject.getObjectName());
+            values.put(MySQLiteHelper.I_COLUMN_DESCRIPTION, inspectionObject.getDescription());
+            values.put(MySQLiteHelper.I_COLUMN_LOCATION, inspectionObject.getLocation());
+            values.put(MySQLiteHelper.I_COLUMN_CUSTOMERNAME, inspectionObject.getCustomerName());
+
+            return database.update(TABLE_INSPECTIONOBJECTS, values, I_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(inspectionObject.getId()) });
+        }
+
+        //Delete an inspectionObject
+        public void deleteInspectionObject(String objectId) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_INSPECTIONOBJECTS, I_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(objectId) });
+        }
+        //RUD-Methods for User
+
+        //Read all users from the local database
+        //returns a list with all users
+        public List<User> getAllUserNames() {
+            List<User> listUserNames = new ArrayList<>();
             String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_USERS;
-
-
-
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
 
@@ -293,40 +345,65 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                 do {
                     User user = new User();
                     user.setUserName(c.getString((c.getColumnIndex(U_COLUMN_USERNAME))));
-
-
                     // adding to assignment list
-                    listUserNames.add(user.getUserName());
+                    listUserNames.add(user);
                 } while (c.moveToNext());
             }
 
             return listUserNames;
         }
 
-        public List<String> getAllTasks() {
-            List<String> tasks = new ArrayList<String>();
+        //Update a user
+        public int updateUser(User user){
+            SQLiteDatabase database = this.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(MySQLiteHelper.U_COLUMN_USER_ID, user.getUserId());
+            values.put(MySQLiteHelper.U_COLUMN_USERNAME, user.getUserName());
+            values.put(MySQLiteHelper.U_COLUMN_FIRSTNAME, user.getFirstName());
+            values.put(MySQLiteHelper.U_COLUMN_LASTNAME, user.getLastName());
+            values.put(MySQLiteHelper.U_COLUMN_ROLE, user.getRole());
+            values.put(MySQLiteHelper.U_COLUMN_EMAIL, user.getEmail());
+            values.put(MySQLiteHelper.U_COLUMN_MOBILENUMBER, user.getMobileNumber());
+            values.put(MySQLiteHelper.U_COLUMN_PHONENUMBER, user.getPhoneNumber());
+
+            return database.update(TABLE_USERS, values, U_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(user.getUserId()) });
+        }
+
+        //Delete a user
+        public void deleteUser(String userId) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_USERS, U_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(userId) });
+        }
+
+        //RUD-Methods for tasks
+
+        //Get all tasks stored in the local database
+        public List<Task> getAllTasks() {
+            List<Task> tasks = new ArrayList<>();
             String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_TASKS;
-
-
-
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
-
             // looping through all rows and adding to list
             if (c.moveToFirst()) {
                 do {
                     Task task = new Task();
                     task.setTaskName(c.getString((c.getColumnIndex(T_COLUMN_TASKNAME))));
-
-
+                    task.setState(c.getInt((c.getColumnIndex(T_COLUMN_STATE))));
+                    task.setDescription(c.getString((c.getColumnIndex(T_COLUMN_DESCRIPTION))));
+                    task.setId(c.getString((c.getColumnIndex(T_COLUMN_TASK_ID))));
+                    task.setAssignmentId(c.getString((c.getColumnIndex(T_COLUMN_PK))));
                     // adding to assignment list
-                    tasks.add(task.getTaskName());
+                    tasks.add(task);
                 } while (c.moveToNext());
             }
 
             return tasks;
         }
 
+        //Get all tasks assigned to an assignment using the assignment ID
         public List<Task> getTasksByAssignmentId(String assignmentId) {
             List<Task> taskList = new ArrayList<Task>();
             String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_TASKS + " WHERE " + T_COLUMN_PK + " = " + "'" + assignmentId + "'";
@@ -350,6 +427,98 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             }
             db.close();
             return taskList;
+        }
+
+        //Update a task
+        public int updateTask(Task task){
+            SQLiteDatabase database = this.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(MySQLiteHelper.T_COLUMN_TASK_ID, task.getId());
+            values.put(MySQLiteHelper.T_COLUMN_TASKNAME, task.getTaskName());
+            values.put(MySQLiteHelper.T_COLUMN_DESCRIPTION, task.getDescription());
+            values.put(MySQLiteHelper.T_COLUMN_STATE, task.getState());
+            values.put(MySQLiteHelper.T_COLUMN_PK, task.getAssignmentId());
+
+            return database.update(TABLE_TASKS, values, T_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(task.getId()) });
+        }
+
+        //Delete a task
+        public void deleteTask(String taskId) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_TASKS, T_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(taskId) });
+        }
+
+        //RUD-Methods for Attachment
+        //Read an attachment by a given task ID
+        public Attachment getAttachmentsByTaskId(String taskId) {
+
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_ATTACHMENTS + " WHERE " + AT_COLUMN_FK_TASK_ID + " = " + "'" + taskId + "'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+                    Attachment attachment = new Attachment();
+                    attachment.setId(c.getString((c.getColumnIndex(AT_COLUMN_ATTACHMENT_ID))));
+                    attachment.setBinaryObject(c.getString(c.getColumnIndex(AT_COLUMN_BINARY_OBJECT)));
+                    attachment.setFile_type(c.getString((c.getColumnIndex(AT_COLUMN_FILE_TYPE))));
+                    attachment.setTaskId(c.getString((c.getColumnIndex(AT_COLUMN_FK_TASK_ID))));
+                    attachment.setAssignmentId(c.getString((c.getColumnIndex(AT_COLUMN_FK_ASSIGNMENT_ID))));
+
+            db.close();
+            return attachment;
+        }
+
+        //Read all attachments by a given assignment ID
+        //Returns a list with all attachments assigned to the assignment
+        public List<Attachment> getAttachmentsByAssignmentId(String assignmentId) {
+            List<Attachment> attachmentList = new ArrayList<>();
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_ATTACHMENTS + " WHERE " + AT_COLUMN_FK_ASSIGNMENT_ID + " = " + "'" + assignmentId + "'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    Attachment attachment = new Attachment();
+                    attachment.setId(c.getString((c.getColumnIndex(AT_COLUMN_ATTACHMENT_ID))));
+                    attachment.setBinaryObject(c.getString(c.getColumnIndex(AT_COLUMN_BINARY_OBJECT)));
+                    attachment.setFile_type(c.getString((c.getColumnIndex(AT_COLUMN_FILE_TYPE))));
+                    attachment.setTaskId(c.getString((c.getColumnIndex(AT_COLUMN_FK_TASK_ID))));
+                    attachment.setAssignmentId(c.getString((c.getColumnIndex(AT_COLUMN_FK_ASSIGNMENT_ID))));
+
+
+                    // adding to task list
+                    attachmentList.add(attachment);
+                } while (c.moveToNext());
+            }
+            db.close();
+            return attachmentList;
+        }
+
+        //Update an attachment
+        public int updateAttachment(Attachment attachment){
+            SQLiteDatabase database = this.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(MySQLiteHelper.AT_COLUMN_ATTACHMENT_ID, attachment.getId());
+            values.put(MySQLiteHelper.AT_COLUMN_FILE_TYPE, attachment.getFile_type());
+            values.put(MySQLiteHelper.AT_COLUMN_BINARY_OBJECT, attachment.getBinaryObject().toString());
+            values.put(MySQLiteHelper.AT_COLUMN_FK_TASK_ID, attachment.getTaskId());
+            values.put(MySQLiteHelper.AT_COLUMN_FK_ASSIGNMENT_ID, attachment.getAssignmentId());
+
+            return database.update(TABLE_ATTACHMENTS, values, AT_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(attachment.getId()) });
+        }
+
+        //Delete an attachment
+        public void deleteAttachment(String attachmentId) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_ATTACHMENTS, AT_COLUMN_ROWID + " = ?",
+                    new String[] { String.valueOf(attachmentId) });
         }
 
         // closing database
