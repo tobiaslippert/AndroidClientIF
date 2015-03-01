@@ -349,12 +349,39 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                 do {
                     User user = new User();
                     user.setUserName(c.getString((c.getColumnIndex(U_COLUMN_USERNAME))));
+                    user.setUserId(c.getString((c.getColumnIndex(U_COLUMN_USER_ID))));
+                    user.setFirstName(c.getString((c.getColumnIndex(U_COLUMN_FIRSTNAME))));
+                    user.setLastName(c.getString((c.getColumnIndex(U_COLUMN_LASTNAME))));
+                    user.setEmail(c.getString((c.getColumnIndex(U_COLUMN_EMAIL))));
+                    user.setRole(c.getString((c.getColumnIndex(U_COLUMN_ROLE))));
+                    user.setMobileNumber(c.getString((c.getColumnIndex(U_COLUMN_MOBILENUMBER))));
+                    user.setPhoneNumber(c.getString(c.getColumnIndex(U_COLUMN_PHONENUMBER)));
                     // adding to assignment list
                     listUserNames.add(user);
                 } while (c.moveToNext());
             }
 
             return listUserNames;
+        }
+        //Read a user with a specific ID from the local database
+        //Return a user
+        public User getUserByUserId(String userId){
+            User user = new User();
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_USERS + " WHERE " + U_COLUMN_USER_ID + " = " + "'" + userId + "'";
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            c.moveToFirst();
+
+            user.setUserName(c.getString((c.getColumnIndex(U_COLUMN_USERNAME))));
+            user.setUserId(c.getString((c.getColumnIndex(U_COLUMN_USER_ID))));
+            user.setFirstName(c.getString((c.getColumnIndex(U_COLUMN_FIRSTNAME))));
+            user.setLastName(c.getString((c.getColumnIndex(U_COLUMN_LASTNAME))));
+            user.setEmail(c.getString((c.getColumnIndex(U_COLUMN_EMAIL))));
+            user.setRole(c.getString((c.getColumnIndex(U_COLUMN_ROLE))));
+            user.setMobileNumber(c.getString((c.getColumnIndex(U_COLUMN_MOBILENUMBER))));
+            user.setPhoneNumber(c.getString(c.getColumnIndex(U_COLUMN_PHONENUMBER)));
+
+            return user;
         }
 
         //Update a user
