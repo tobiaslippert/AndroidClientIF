@@ -1,6 +1,7 @@
 package com.example.tobias.androidclientif.Application_Layer;
 
 import com.example.tobias.androidclientif.Entities.Assignment;
+import com.example.tobias.androidclientif.Entities.InspectionObject;
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Entities.User;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class ParseJSON {
 
-    //Method: Parse User to JSON
+    //Method: Parse User to JSON String
     public String userToJson(User user){
         JSONObject jsonObject = new JSONObject();
         try {
@@ -33,6 +34,7 @@ public class ParseJSON {
         return jsonObject.toString();
     }
 
+    //Method: Parse Task to JSON String
     public String taskToJson (Task task){
         JSONObject jsonObject = new JSONObject();
 
@@ -47,25 +49,26 @@ public class ParseJSON {
         return jsonObject.toString();
     }
 
-    public String assignmentToJson(Assignment assignment){
-        JSONObject jsonObject = new JSONObject();
+    //Method: Parse Assignment to JSON String
+    public String assignmentToJson(Assignment assignment, Task task, User user, InspectionObject inspectionObject){
+        JSONObject jsonObjectAssignment = new JSONObject();
 
         try {
-            jsonObject.put("id", assignment.getId());
-            jsonObject.put("assignmentName", assignment.getAssignmentName());
-            jsonObject.put("description", assignment.getDescription());
-            jsonObject.put("isTemplate", assignment.getIsTemplate());
-            jsonObject.put("tasks", null);
-            jsonObject.put("startDate", assignment.getStartDate());
-            jsonObject.put("endDate", assignment.getDueDate());
-            jsonObject.put("attachmentIds", null);
-            jsonObject.put("user",null);
-            jsonObject.put("inspectionObject", null);
+            jsonObjectAssignment.put("id", assignment.getId());
+            jsonObjectAssignment.put("assignmentName", assignment.getAssignmentName());
+            jsonObjectAssignment.put("description", assignment.getDescription());
+            jsonObjectAssignment.put("isTemplate", assignment.getIsTemplate());
+            jsonObjectAssignment.put("state", assignment.getState());
+            jsonObjectAssignment.put("tasks", null);
+            jsonObjectAssignment.put("startDate", assignment.getStartDate());
+            jsonObjectAssignment.put("endDate", assignment.getDueDate());
+            //jsonObjectAssignment.put("attachmentIds", null);
+
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return jsonObject.toString();
+        return jsonObjectAssignment.toString();
     }
 }

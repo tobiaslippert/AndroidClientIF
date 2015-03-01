@@ -39,6 +39,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String A_COLUMN_USER_ID = "userId";
         public static final String A_COLUMN_INSPECTIONOBJECT_ID = "inspectionObjectId";
         public static final String A_COLUMN_ISTEMPLATE = "isTemplate";
+        public static final String A_COLUMN_STATE = "state";
 
         //Column names table tasks
         public static final String T_COLUMN_ROWID = "_id";
@@ -79,13 +80,13 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 7;
+        private static final int DATABASE_VERSION = 8;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
                 + TABLE_ASSIGNMENTS + "(" + A_COLUMN_ROWID + " INTEGER, " + A_COLUMN_ASSIGNMENT_ID + " TEXT PRIMARY KEY UNIQUE, "
                 + A_COLUMN_DESCRIPTION + " TEXT, " + A_COLUMN_ASSIGNMENTNAME + " TEXT, " + A_COLUMN_STARTDATE + " INTEGER, " + A_COLUMN_ENDDATE + " INTEGER, "
-                + A_COLUMN_ISTEMPLATE + " TEXT, " + A_COLUMN_INSPECTIONOBJECT_ID + " TEXT, "  + A_COLUMN_USER_ID + " TEXT)";
+                + A_COLUMN_ISTEMPLATE + " TEXT, " + A_COLUMN_INSPECTIONOBJECT_ID + " TEXT, "  + A_COLUMN_USER_ID + " TEXT, " + A_COLUMN_STATE + " TEXT)";
 
         //Task Table creation sql statement
         private static final String CREATE_TABLE_TASKS = "CREATE TABLE "
@@ -106,8 +107,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Attachment table creation sql statement
         private static final String CREATE_TABLE_ATTACHMENTS = "CREATE TABLE "
                 + TABLE_ATTACHMENTS + "(" + AT_COLUMN_ROWID + " INTEGER, " + AT_COLUMN_ATTACHMENT_ID + " TEXT PRIMARY KEY UNIQUE, " + AT_COLUMN_FILE_TYPE + " TEXT, "
-                + AT_COLUMN_BINARY_OBJECT + " TEXT, " + AT_COLUMN_FK_TASK_ID + " TEXT, " + " FOREIGN KEY(fkTaskId) REFERENCES TABLE_TASKS(taskId)), " + AT_COLUMN_FK_ASSIGNMENT_ID + " TEXT, " + " FOREIGN KEY(fkAssignmentId) REFERENCES TABLE_ASSIGNMENTS(assignmentId))";
-
+                + AT_COLUMN_BINARY_OBJECT + " TEXT, " + AT_COLUMN_FK_ASSIGNMENT_ID + " TEXT, " + AT_COLUMN_FK_TASK_ID + " TEXT, " + " FOREIGN KEY(fkTaskId) REFERENCES TABLE_TASKS(taskId))";
         public MySQLiteHelper(Context context) {
                 super(context, DATABASE_NAME, null, DATABASE_VERSION);
             }
@@ -165,6 +165,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.A_COLUMN_ISTEMPLATE, assignment.getIsTemplate());
             values.put(MySQLiteHelper.A_COLUMN_INSPECTIONOBJECT_ID, assignment.getInspectionObjectId());
             values.put(MySQLiteHelper.A_COLUMN_USER_ID, assignment.getUserId());
+            values.put(MySQLiteHelper.A_COLUMN_STATE, assignment.getState());
 
             //insert row
             long insertId = database.insert(MySQLiteHelper.TABLE_ASSIGNMENTS, null,
@@ -237,6 +238,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                     assignment.setStartDate((c.getInt(c.getColumnIndex(A_COLUMN_STARTDATE))));
                     assignment.setDueDate((c.getInt(c.getColumnIndex(A_COLUMN_ENDDATE))));
                     assignment.setIsTemplate((c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE))));
+                    assignment.setState((c.getString(c.getColumnIndex(A_COLUMN_STATE))));
                     // adding to assignment list
                     listAssignments.add(assignment);
                 } while (c.moveToNext());
@@ -260,6 +262,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             assignment.setDueDate(c.getInt(c.getColumnIndex(A_COLUMN_ENDDATE)));
             assignment.setIsTemplate(c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE)));
             assignment.setUserId(c.getString(c.getColumnIndex(A_COLUMN_USER_ID)));
+            assignment.setState((c.getString(c.getColumnIndex(A_COLUMN_STATE))));
 
             db.close();
             return assignment;
@@ -278,6 +281,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(A_COLUMN_INSPECTIONOBJECT_ID, assignment.getInspectionObjectId());
             values.put(A_COLUMN_STARTDATE, assignment.getStartDate());
             values.put(A_COLUMN_ENDDATE, assignment.getDueDate());
+            values.put(A_COLUMN_STATE, assignment.getState());
 
             // updating row
             return db.update(TABLE_ASSIGNMENTS, values, A_COLUMN_ROWID + " = ?",

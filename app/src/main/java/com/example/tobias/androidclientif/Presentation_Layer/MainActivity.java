@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
             public void onClick(View view){
                 Intent openMyAssignments = new Intent(getApplicationContext(), MyAssignmentsActivity.class);
                 startActivity(openMyAssignments);
+
             }
         });
 
@@ -78,7 +79,7 @@ public class MainActivity extends Activity {
                 @SuppressWarnings("unchecked")
 
                 //Download all inspectionObjects from ther server
-               String inputInspectionObjects = restInstance.readHerokuServer("inspectionobjects");
+               String inputInspectionObjects = restInstance.readHerokuServer("inspectionobject");
 
                 try {
                     JSONArray jsonArray0 = new JSONArray(inputInspectionObjects);
@@ -117,6 +118,7 @@ public class MainActivity extends Activity {
                         ass.setStartDate(jObject.getInt("startDate"));
                         ass.setDueDate(jObject.getInt("endDate"));
                         ass.setIsTemplate(jObject.get("isTemplate").toString());
+                        ass.setState(jObject.get("state").toString());
 
                         //Download all tasks assigned to an assignment from the server
                         //jArrayTask gets the SubJSONObject "tasks"
