@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#046697"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Problem Description"
+        android:id="@+id/textView3"
+        android:textColor="#FFFFFF" />
+
+    <EditText
+        android:layout_width="348dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:background="#FFFFFF"
+        android:layout_weight="0.28"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Select the attachment type"
+        android:id="@+id/textView"
+        android:textColor="#FFFFFF" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:spinnerMode="dropdown"
+        android:layout_gravity="center_horizontal" />
+
+    <ImageView
+        android:layout_width="284dp"
+        android:layout_height="202dp"
+        android:id="@+id/imageView_Pic"
+        android:layout_gravity="center_horizontal"
+        android:background="#FFFFFF"
+        android:layout_weight="0.07"
+        android:src="@drawable/came"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Picture"
+        android:id="@+id/button_Pic"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <Button
+        android:layout_width="203dp"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal"
+        android:background="#ECCF38"
+        android:layout_weight="0.17" />
+
+</LinearLayout>

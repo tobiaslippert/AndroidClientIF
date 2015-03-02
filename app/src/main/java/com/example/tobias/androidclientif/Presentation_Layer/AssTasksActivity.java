@@ -1,7 +1,10 @@
 package com.example.tobias.androidclientif.Presentation_Layer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,5 +27,13 @@ public class AssTasksActivity extends Activity{
         listViewAssTasks = (ListView) findViewById(R.id.lvAssTasks);
         ListAdapter listenAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, datasource.getAllTasks());
         listViewAssTasks.setAdapter(listenAdapter);
+
+        listViewAssTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent openTaskAttach = new Intent(getApplicationContext(), TaskAttachActivity.class);
+                startActivity(openTaskAttach);
+            }
+        });
     }
 }
