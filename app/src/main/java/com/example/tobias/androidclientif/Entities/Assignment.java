@@ -14,6 +14,7 @@ public class Assignment {
     String userId;
     String inspectionObjectId;
     String isTemplate;
+    String state;
 
 
     //Constructor
@@ -22,6 +23,11 @@ public class Assignment {
     }
 
     //Setter
+
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public void setIsTemplate(String isTemplate) {
         this.isTemplate = isTemplate;
@@ -57,6 +63,9 @@ public class Assignment {
     }
 
     //Getter
+    public String getState() {
+        return state;
+    }
 
     public String getIsTemplate() {
         return isTemplate;

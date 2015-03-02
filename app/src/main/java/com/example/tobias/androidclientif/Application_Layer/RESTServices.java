@@ -14,6 +14,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
@@ -53,6 +54,7 @@ public class RESTServices {
             HttpResponse response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
             int statusCode = statusLine.getStatusCode();
+            System.out.println(statusCode);
             if (statusCode == 200) {
                 HttpEntity entity = response.getEntity();
                 InputStream content = entity.getContent();
@@ -73,6 +75,9 @@ public class RESTServices {
 
     }
 
+    //Postmethod
+    //Receives the uri, where the String should be posted to and the String
+    //Should be used than a new object is send to the server, that is not already stored in the server database
     public void postToHerokuServer(String uri, String jsonObject){
         JSONObject jO;
 
@@ -109,6 +114,9 @@ public class RESTServices {
         }
     }
 
+    //Putmethod
+    //Receives the URI where the object should be put at and the String
+    //Should be used than an existing object of the server database should be updated
     public void putToHerokuServer(String uri, String jsonObject){
         JSONObject jO;
 
@@ -119,7 +127,7 @@ public class RESTServices {
 
 
         HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost("https://inspection-framework.herokuapp.com/"+uri);
+        HttpPut httpPut = new HttpPut("https://inspection-framework.herokuapp.com/"+uri);
 
         //Create a new JSONObject from the given String
         try {
@@ -127,13 +135,13 @@ public class RESTServices {
             //passes the results to a string builder/entity
             try {
                 StringEntity se = new StringEntity(jO.toString());
-                httpPost.setEntity(se);
+                httpPut.setEntity(se);
                 //sets a request header so the page receving the request
                 //will know what to do with it
-                httpPost.setHeader("Accept", "application/json");
-                httpPost.setHeader("Content-type", "application/json");
+                httpPut.setHeader("Accept", "application/json");
+                httpPut.setHeader("Content-type", "application/json");
                 try {
-                    httpClient.execute(httpPost);
+                    httpClient.execute(httpPut);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

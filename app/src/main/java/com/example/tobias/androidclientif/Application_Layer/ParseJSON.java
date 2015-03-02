@@ -1,12 +1,15 @@
 package com.example.tobias.androidclientif.Application_Layer;
 
 import com.example.tobias.androidclientif.Entities.Assignment;
+import com.example.tobias.androidclientif.Entities.InspectionObject;
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Entities.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +17,8 @@ import java.util.List;
  */
 public class ParseJSON {
 
-    //Method: Parse User to JSON
-    public String userToJson(User user){
+    //Method: Parse User to JSON String
+    public JSONObject userToJson(User user){
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", user.getUserId());
@@ -30,42 +33,73 @@ public class ParseJSON {
             e.printStackTrace();
         }
 
-        return jsonObject.toString();
+        return jsonObject;
     }
 
-    public String taskToJson (Task task){
-        JSONObject jsonObject = new JSONObject();
-
+    //Method: Parse Inspection to JSONObject
+    public JSONObject inspectionObjectToJson(InspectionObject inspectionObject){
+        JSONObject jsonObjectInspectionObject = new JSONObject();
         try {
-            jsonObject.put("id", task.getId());
-            jsonObject.put("taskName", task.getTaskName());
-            jsonObject.put("description", task.getDescription());
-            jsonObject.put("state", task.getState());
+            jsonObjectInspectionObject.put("id", inspectionObject.getId());
+            jsonObjectInspectionObject.put("objectName", inspectionObject.getObjectName());
+            jsonObjectInspectionObject.put("description", inspectionObject.getDescription());
+            jsonObjectInspectionObject.put("location", inspectionObject.getLocation());
+            jsonObjectInspectionObject.put("customerName", inspectionObject.getCustomerName());
+            jsonObjectInspectionObject.put("attachmentIds", null);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return jsonObject.toString();
+        return jsonObjectInspectionObject;
     }
 
-    public String assignmentToJson(Assignment assignment){
+    //Method: Parse Task to JSON String
+    public JSONArray taskToJson (List<Task> taskList){
+        JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
 
+        for (int i = 0; i< taskList.size(); i++) {
+            Task task = taskList.get(i);
+
+            try {
+                jsonObject.put("id", task.getId());
+                jsonObject.put("taskName", task.getTaskName());
+                jsonObject.put("description", task.getDescription());
+                jsonObject.put("state", task.getState());
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
+    }
+
+    //Method: Parse Assignment to JSON String
+    public String completeAssignmentToJson(Assignment assignment, List<Task> listWithallAssignedTasks, User assignedUser, InspectionObject assignedInspectionObject){
+        JSONObject jsonObjectAssignment = new JSONObject();
+        JSONArray jsonArrayTasks = new JSONArray();
+        jsonArrayTasks = taskToJson(listWithallAssignedTasks);
+        JSONObject jsonObjectInspectionObject = inspectionObjectToJson(assignedInspectionObject);
+        JSONObject jsonObjectUser = userToJson(assignedUser);
+
         try {
-            jsonObject.put("id", assignment.getId());
-            jsonObject.put("assignmentName", assignment.getAssignmentName());
-            jsonObject.put("description", assignment.getDescription());
-            jsonObject.put("isTemplate", assignment.getIsTemplate());
-            jsonObject.put("tasks", null);
-            jsonObject.put("startDate", assignment.getStartDate());
-            jsonObject.put("endDate", assignment.getDueDate());
-            jsonObject.put("attachmentIds", null);
-            jsonObject.put("user",null);
-            jsonObject.put("inspectionObject", null);
+
+            jsonObjectAssignment.put("id", assignment.getId());
+            jsonObjectAssignment.put("assignmentName", assignment.getAssignmentName());
+            jsonObjectAssignment.put("description", assignment.getDescription());
+            jsonObjectAssignment.put("isTemplate", assignment.getIsTemplate());
+            jsonObjectAssignment.put("state", assignment.getState());
+            jsonObjectAssignment.put("tasks", jsonArrayTasks);
+            jsonObjectAssignment.put("startDate", assignment.getStartDate());
+            jsonObjectAssignment.put("endDate", assignment.getDueDate());
+            jsonObjectAssignment.put("attachmentIds", null);
+            jsonObjectAssignment.put("user", jsonObjectUser);
+            jsonObjectAssignment.put("inspectionObject", jsonObjectInspectionObject);
+
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return jsonObject.toString();
+        return jsonObjectAssignment.toString();
     }
 }

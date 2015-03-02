@@ -22,7 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
             public void onClick(View view){
                 Intent openMyAssignments = new Intent(getApplicationContext(), MyAssignmentsActivity.class);
                 startActivity(openMyAssignments);
+
             }
         });
 
@@ -78,7 +79,7 @@ public class MainActivity extends Activity {
                 @SuppressWarnings("unchecked")
 
                 //Download all inspectionObjects from ther server
-               String inputInspectionObjects = restInstance.readHerokuServer("inspectionobjects");
+               String inputInspectionObjects = restInstance.readHerokuServer("inspectionobject");
 
                 try {
                     JSONArray jsonArray0 = new JSONArray(inputInspectionObjects);
@@ -93,20 +94,8 @@ public class MainActivity extends Activity {
                         insOb.setCustomerName(jsonObject0.get("customerName").toString());
                         insOb.setLocation(jsonObject0.get("location").toString());
 
-                        String objectId;
-                        String objectName;
-                        String objectDescription;
-                        String customerName;
-                        String location;
-
-                        objectId = insOb.getId();
-                        objectName = insOb.getObjectName();
-                        objectDescription = insOb.getDescription();
-                        customerName = insOb.getCustomerName();
-                        location = insOb.getLocation();
-
                         //store all inspectionObjects into the database
-                        datasource.createInspectionObject(objectId, objectName, objectDescription,location,customerName);
+                        datasource.createInspectionObject(insOb);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -128,23 +117,8 @@ public class MainActivity extends Activity {
                         ass.setId(jObject.get("id").toString());
                         ass.setStartDate(jObject.getInt("startDate"));
                         ass.setDueDate(jObject.getInt("endDate"));
-                        ass.setInspectionObjectId(jObject.get("isTemplate").toString());
-
-
-                        String assignmentName;
-                        String description;
-                        String id;
-                        Integer startDate;
-                        Integer endDate;
-                        String isTemplate;
-
-
-                        assignmentName = ass.getAssignmentName();
-                        description = ass.getDescription();
-                        id = ass.getId();
-                        startDate = ass.getStartDate();
-                        endDate = ass.getDueDate();
-                        isTemplate = ass.getIsTemplate();
+                        ass.setIsTemplate(jObject.get("isTemplate").toString());
+                        ass.setState(jObject.get("state").toString());
 
                         //Download all tasks assigned to an assignment from the server
                         //jArrayTask gets the SubJSONObject "tasks"
@@ -157,35 +131,19 @@ public class MainActivity extends Activity {
                             task.setDescription(jObjectTask.get("description").toString());
                             task.setState(jObjectTask.getInt("state"));
                             task.setTaskName(jObjectTask.get("taskName").toString());
-
-                            String taskName;
-                            String taskId;
-                            String taskDescription;
-                            Integer taskState;
-
-                            taskName = task.getTaskName();
-                            taskId = task.getId();
-                            taskDescription = task.getDescription();
-                            taskState = task.getState();
+                            task.setAssignmentId(ass.getId());
 
                             //Store all assigned tasks into the database
-                            datasource.createTask(taskId, taskName, taskDescription, taskState, id);
+                            datasource.createTask(task);
                         }
 
                         JSONObject jObjectInspectionObject = new JSONObject(jObject.get("inspectionObject").toString());
-                        InspectionObject inspectionObject = new InspectionObject();
-                        inspectionObject.setId(jObjectInspectionObject.get("id").toString());
-                        String objectId;
-                        objectId = inspectionObject.getId();
+                        ass.setInspectionObjectId(jObjectInspectionObject.get("id").toString());
 
                         JSONObject jObjectUser = new JSONObject(jObject.get("user").toString());
-                        User user = new User();
-                        user.setUserId(jObjectUser.get("id").toString());
-                        String userId;
-                        userId = user.getUserId();
-
+                        ass.setUserId(jObjectUser.get("id").toString());
                         //Store all assignments into the database
-                        datasource.createAssignment(id, assignmentName, description, startDate, endDate, objectId,userId, isTemplate);
+                        datasource.createAssignment(ass);
 
                     }
 
