@@ -80,7 +80,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 8;
+        private static final int DATABASE_VERSION = 11;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -157,19 +157,21 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             SQLiteDatabase database = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MySQLiteHelper.A_COLUMN_DESCRIPTION, assignment.getDescription());
-            values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENTNAME, assignment.getAssignmentName());
-            values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENT_ID, assignment.getId());
-            values.put(MySQLiteHelper.A_COLUMN_STARTDATE, assignment.getStartDate());
-            values.put(MySQLiteHelper.A_COLUMN_ENDDATE, assignment.getDueDate());
-            values.put(MySQLiteHelper.A_COLUMN_ISTEMPLATE, assignment.getIsTemplate());
-            values.put(MySQLiteHelper.A_COLUMN_INSPECTIONOBJECT_ID, assignment.getInspectionObjectId());
-            values.put(MySQLiteHelper.A_COLUMN_USER_ID, assignment.getUserId());
-            values.put(MySQLiteHelper.A_COLUMN_STATE, assignment.getState());
 
-            //insert row
-            long insertId = database.insert(MySQLiteHelper.TABLE_ASSIGNMENTS, null,
-                    values);
+                values.put(MySQLiteHelper.A_COLUMN_DESCRIPTION, assignment.getDescription());
+                values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENTNAME, assignment.getAssignmentName());
+                values.put(MySQLiteHelper.A_COLUMN_ASSIGNMENT_ID, assignment.getId());
+                values.put(MySQLiteHelper.A_COLUMN_STARTDATE, assignment.getStartDate());
+                values.put(MySQLiteHelper.A_COLUMN_ENDDATE, assignment.getDueDate());
+                values.put(MySQLiteHelper.A_COLUMN_ISTEMPLATE, assignment.getIsTemplate());
+                values.put(MySQLiteHelper.A_COLUMN_INSPECTIONOBJECT_ID, assignment.getInspectionObjectId());
+                values.put(MySQLiteHelper.A_COLUMN_USER_ID, assignment.getUserId());
+                values.put(MySQLiteHelper.A_COLUMN_STATE, assignment.getState());
+
+                //insert row
+                long insertId = database.insert(MySQLiteHelper.TABLE_ASSIGNMENTS, null,
+                        values);
+
         }
 
         //Create a row Task
@@ -235,10 +237,12 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                     assignment.setId(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENT_ID))));
                     assignment.setAssignmentName(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENTNAME))));
                     assignment.setDescription((c.getString(c.getColumnIndex(A_COLUMN_DESCRIPTION))));
-                    assignment.setStartDate((c.getInt(c.getColumnIndex(A_COLUMN_STARTDATE))));
-                    assignment.setDueDate((c.getInt(c.getColumnIndex(A_COLUMN_ENDDATE))));
+                    assignment.setStartDate((c.getLong(c.getColumnIndex(A_COLUMN_STARTDATE))));
+                    assignment.setDueDate((c.getLong(c.getColumnIndex(A_COLUMN_ENDDATE))));
                     assignment.setIsTemplate((c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE))));
-                    assignment.setState((c.getString(c.getColumnIndex(A_COLUMN_STATE))));
+                    assignment.setState((c.getInt(c.getColumnIndex(A_COLUMN_STATE))));
+                    assignment.setInspectionObjectId((c.getString(c.getColumnIndex(A_COLUMN_INSPECTIONOBJECT_ID))));
+                    assignment.setUserId((c.getString(c.getColumnIndex(A_COLUMN_USER_ID))));
                     // adding to assignment list
                     listAssignments.add(assignment);
                 } while (c.moveToNext());
@@ -258,11 +262,13 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             assignment.setId(c.getString(c.getColumnIndex(A_COLUMN_ASSIGNMENT_ID)));
             assignment.setAssignmentName(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENTNAME))));
             assignment.setDescription(c.getString(c.getColumnIndex(A_COLUMN_DESCRIPTION)));
-            assignment.setStartDate(c.getInt(c.getColumnIndex(A_COLUMN_STARTDATE)));
-            assignment.setDueDate(c.getInt(c.getColumnIndex(A_COLUMN_ENDDATE)));
+            assignment.setStartDate(c.getLong(c.getColumnIndex(A_COLUMN_STARTDATE)));
+            assignment.setDueDate(c.getLong(c.getColumnIndex(A_COLUMN_ENDDATE)));
             assignment.setIsTemplate(c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE)));
             assignment.setUserId(c.getString(c.getColumnIndex(A_COLUMN_USER_ID)));
-            assignment.setState((c.getString(c.getColumnIndex(A_COLUMN_STATE))));
+            assignment.setState((c.getInt(c.getColumnIndex(A_COLUMN_STATE))));
+            assignment.setInspectionObjectId((c.getString(c.getColumnIndex(A_COLUMN_INSPECTIONOBJECT_ID))));
+            assignment.setUserId((c.getString(c.getColumnIndex(A_COLUMN_USER_ID))));
 
             db.close();
             return assignment;

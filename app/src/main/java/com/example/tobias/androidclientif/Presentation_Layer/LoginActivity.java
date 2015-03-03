@@ -78,23 +78,23 @@ public class LoginActivity extends Activity{
         Login.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+           public void onClick(View v) {
                 // TODO Auto-generated method stub
                 String fieldInput;
                 List<User> compareList = new ArrayList<>();
-                compareList = datasource.getAllUserNames();
+                //compareList = datasource.getAllUserNames();
                 fieldInput = editTextUserName.getText().toString();
                 boolean isValid;
 
 
-                if (fieldInput != null) {
+                /*if (fieldInput != null) {
                     isValid = isValidUserName(fieldInput, compareList);
 
 
-                    if (isValid == true) {                                                          //if isValid is true continue to the menu
+                    if (isValid == true) { */
                         Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(openMenu);
-                    } else {                                                                        //else raise an error message
+                    /*} else {
 
                         AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
 
@@ -114,10 +114,13 @@ public class LoginActivity extends Activity{
                     }
                 } else {
 
-                }
+                } */
             }
         });
     }
+
+
+
 
 
     //Compares a String with the entries of a List<String> in order to check, whether the String appears in the list
