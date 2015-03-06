@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 
-import com.example.tobias.androidclientif.Application_Layer.RESTServices;
+import com.example.tobias.androidclientif.Application_Layer.HttpCustomClient;
 import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.Entities.InspectionObject;
 import com.example.tobias.androidclientif.Entities.Task;
@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
 
     //VAR-Declaration
     private MySQLiteHelper datasource;
-    private RESTServices restInstance;
+    private HttpCustomClient restInstance;
     private ParseJSON parser;
     Button Download;
     Button MyAssignments;
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         datasource = new MySQLiteHelper(getApplicationContext());
-        restInstance = new RESTServices();
+        restInstance = new HttpCustomClient();
         parser = new ParseJSON();
         Download = (Button) findViewById(R.id.bDown);
         MyAssignments = (Button) findViewById(R.id.bMyAss);
