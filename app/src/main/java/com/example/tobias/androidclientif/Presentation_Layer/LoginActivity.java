@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.tobias.androidclientif.Application_Layer.HttpCustomClient;
+import com.example.tobias.androidclientif.Application_Layer.InternetConnectionDetector;
 import com.example.tobias.androidclientif.Entities.User;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
 import com.example.tobias.androidclientif.R;
@@ -28,6 +29,7 @@ public class LoginActivity extends Activity{
     //Var declaration
     private MySQLiteHelper datasource;
     private HttpCustomClient clientInstance;
+    private InternetConnectionDetector icd;
     Button Login;
     String user;
     EditText editTextUserName;
@@ -42,6 +44,7 @@ public class LoginActivity extends Activity{
         editPassword = (EditText) findViewById(R.id.editText2);
         datasource = new MySQLiteHelper(getApplicationContext());
         clientInstance = new HttpCustomClient();
+        icd = new InternetConnectionDetector(getApplicationContext());
         //download the JSON String with all users from the server
         //store the JSON String into the variable user
 
@@ -51,48 +54,67 @@ public class LoginActivity extends Activity{
 
             @Override
             public void onClick(View v) {
-
+                boolean isOnline = icd.isConnectedToInternet();
                 String username = editTextUserName.getText().toString();
-
                 String password = editPassword.getText().toString();
-                boolean status = clientInstance.postToHerokuServer("login", username, password);
 
-                if (status == true) {
-                    user = clientInstance.readHerokuServer("users");
+                if (isOnline == true) {
+                    boolean status = clientInstance.postToHerokuServer("login", username, password);
 
-                    try {
-                        JSONArray jArray = new JSONArray(user);
+                    if (status == true) {
+                        user = clientInstance.readHerokuServer("users");
 
-                        for (int i = 0; i < jArray.length(); i++) {
-                            User user = new User();
-                            JSONObject jObject = jArray.getJSONObject(i);
+                        try {
+                            JSONArray jArray = new JSONArray(user);
 
-                            //get and set the values for the table assignments
-                            user.setUserId(jObject.get("id").toString());
-                            user.setUserName(jObject.get("userName").toString());
-                            user.setFirstName(jObject.get("firstName").toString());
-                            user.setLastName(jObject.get("lastName").toString());
-                            user.setRole(jObject.get("role").toString());
-                            user.setEmail(jObject.get("emailAddress").toString());
-                            user.setPhoneNumber(jObject.get("phoneNumber").toString());
-                            user.setMobileNumber(jObject.get("mobileNumber").toString());
+                            for (int i = 0; i < jArray.length(); i++) {
+                                User user = new User();
+                                JSONObject jObject = jArray.getJSONObject(i);
 
-                            datasource.createUser(user);
-                            System.out.println(user.getUserName());
-                            Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(openMenu);
+                                //get and set the values for the table assignments
+                                user.setUserId(jObject.get("id").toString());
+                                user.setUserName(jObject.get("userName").toString());
+                                user.setFirstName(jObject.get("firstName").toString());
+                                user.setLastName(jObject.get("lastName").toString());
+                                user.setRole(jObject.get("role").toString());
+                                user.setEmail(jObject.get("emailAddress").toString());
+                                user.setPhoneNumber(jObject.get("phoneNumber").toString());
+                                user.setMobileNumber(jObject.get("mobileNumber").toString());
+
+                                datasource.createUser(user);
+                                System.out.println(user.getUserName());
+                                Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(openMenu);
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
+                    } else {
+                        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+                        dlgAlert.setMessage("wrong username or password");
+                        dlgAlert.setTitle("Error Message...");
+                        dlgAlert.setPositiveButton("OK", null);
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
+
+                        dlgAlert.setPositiveButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                });
                     }
-
-                } else {
+                }
+                else{
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
 
 
-                    dlgAlert.setMessage("wrong username or password");
+                    dlgAlert.setMessage("No internet connection");
                     dlgAlert.setTitle("Error Message...");
                     dlgAlert.setPositiveButton("OK", null);
                     dlgAlert.setCancelable(true);
@@ -105,7 +127,6 @@ public class LoginActivity extends Activity{
                                 }
                             });
                 }
-
             }
         });
     }
@@ -117,7 +138,7 @@ public class LoginActivity extends Activity{
     //Compares a String with the entries of a List<String> in order to check, whether the String appears in the list
     //Returns true if the String appears in the list
     //Returns false if the string is not in the list
-    public boolean isValidUserName(String fieldEntry, List<User> databaseEntry) {
+    /*public boolean isValidUser(String username, String password, List<User> databaseEntry) {
 
         for (int i = 0; i < databaseEntry.size(); i++) {
             String userName = databaseEntry.get(i).getUserName();
@@ -128,6 +149,6 @@ public class LoginActivity extends Activity{
             }
         }
         return false;
-    }
+    }*/
  }
 

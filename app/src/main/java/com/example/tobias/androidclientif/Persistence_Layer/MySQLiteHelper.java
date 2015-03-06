@@ -344,8 +344,8 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Read all users from the local database
         //returns a list with all users
-        public List<User> getAllUserNames() {
-            List<User> listUserNames = new ArrayList<>();
+        public List<User> getAllUser() {
+            List<User> listUser = new ArrayList<>();
             String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_USERS;
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
@@ -363,11 +363,11 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                     user.setMobileNumber(c.getString((c.getColumnIndex(U_COLUMN_MOBILENUMBER))));
                     user.setPhoneNumber(c.getString(c.getColumnIndex(U_COLUMN_PHONENUMBER)));
                     // adding to assignment list
-                    listUserNames.add(user);
+                    listUser.add(user);
                 } while (c.moveToNext());
             }
 
-            return listUserNames;
+            return listUser;
         }
         //Read a user with a specific ID from the local database
         //Return a user

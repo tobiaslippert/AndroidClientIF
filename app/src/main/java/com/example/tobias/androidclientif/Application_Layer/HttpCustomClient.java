@@ -188,14 +188,5 @@ public class HttpCustomClient {
         }
     }
 
-    //Check whether a internet connection is available
-    //Returns true, when a connection is available
-    //Returns false, when no connection is available
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
 }
 
