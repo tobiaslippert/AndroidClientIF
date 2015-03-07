@@ -48,6 +48,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String T_COLUMN_STATE = "state";
         public static final String T_COLUMN_TASK_ID = "taskId";
         public static final String T_COLUMN_PK = "PK";
+        public static final String T_COLUMN_ERROR_DESCRIPTION = "errorDescription";
 
 
         //Column names table users
@@ -91,7 +92,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Task Table creation sql statement
         private static final String CREATE_TABLE_TASKS = "CREATE TABLE "
                 + TABLE_TASKS + "(" + T_COLUMN_ROWID + " INTEGER, " + T_COLUMN_TASKNAME + " TEXT, " + T_COLUMN_DESCRIPTION + " TEXT, "
-                + T_COLUMN_STATE + " INTEGER, " + T_COLUMN_TASK_ID + " TEXT PRIMARY KEY, " + T_COLUMN_PK + " TEXT, " + " FOREIGN KEY(PK) REFERENCES TABLE_ASSIGNMENTS(assignmentId))";
+                + T_COLUMN_STATE + " INTEGER, " + T_COLUMN_TASK_ID + " TEXT PRIMARY KEY, " + T_COLUMN_ERROR_DESCRIPTION + " TEXT, " + T_COLUMN_PK + " TEXT, " + " FOREIGN KEY(PK) REFERENCES TABLE_ASSIGNMENTS(assignmentId))";
 
         //User Table creation sql statement
         private static final String CREATE_TABLE_USERS = "CREATE TABLE "
@@ -186,6 +187,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.T_COLUMN_DESCRIPTION, task.getDescription());
             values.put(MySQLiteHelper.T_COLUMN_STATE, task.getState());
             values.put(MySQLiteHelper.T_COLUMN_PK, task.getAssignmentId());
+            values.put(MySQLiteHelper.T_COLUMN_ERROR_DESCRIPTION, task.getErrorDescription());
 
             long insertId = database.insert(MySQLiteHelper.TABLE_TASKS, null,
                     values);
@@ -433,6 +435,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                     task.setDescription(c.getString((c.getColumnIndex(T_COLUMN_DESCRIPTION))));
                     task.setId(c.getString((c.getColumnIndex(T_COLUMN_TASK_ID))));
                     task.setAssignmentId(c.getString((c.getColumnIndex(T_COLUMN_PK))));
+                    task.setErrorDescription(c.getString(c.getColumnIndex(T_COLUMN_ERROR_DESCRIPTION)));
                     // adding to assignment list
                     tasks.add(task);
                 } while (c.moveToNext());
@@ -458,6 +461,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                     task.setDescription(c.getString((c.getColumnIndex(T_COLUMN_DESCRIPTION))));
                     task.setState(c.getInt(c.getColumnIndex(T_COLUMN_STATE)));
                     task.setAssignmentId(c.getString(c.getColumnIndex(T_COLUMN_PK)));
+                    task.setErrorDescription(c.getString(c.getColumnIndex(T_COLUMN_ERROR_DESCRIPTION)));
 
                     // adding to task list
                     taskList.add(task);
@@ -477,6 +481,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.T_COLUMN_DESCRIPTION, task.getDescription());
             values.put(MySQLiteHelper.T_COLUMN_STATE, task.getState());
             values.put(MySQLiteHelper.T_COLUMN_PK, task.getAssignmentId());
+            values.put(MySQLiteHelper.T_COLUMN_ERROR_DESCRIPTION, task.getErrorDescription());
 
             return database.update(TABLE_TASKS, values, T_COLUMN_ROWID + " = ?",
                     new String[] { String.valueOf(task.getId()) });
@@ -507,6 +512,21 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
             db.close();
             return attachment;
+        }
+
+        //Read an attachment photo by a given task ID
+        //Returns a byteArray[]
+        public byte[] getAttachmentPhotoByTaskId(String taskId){
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_ATTACHMENTS + " WHERE " + AT_COLUMN_FK_TASK_ID + " = " + "'" + taskId + "'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            byte[] byteArray = (c.getBlob(c.getColumnIndex(AT_COLUMN_BINARY_OBJECT)));
+
+            db.close();
+            return byteArray;
+
         }
 
         //Read all attachments by a given assignment ID

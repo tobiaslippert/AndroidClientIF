@@ -12,7 +12,7 @@ public class BitmapUtility {
 
     // convert from bitmap to byte array
     // this is needed before storing it to the database
-    public static byte[] getBytes(Bitmap bitmap) {
+    public byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         return stream.toByteArray();
@@ -20,7 +20,7 @@ public class BitmapUtility {
 
     // convert from byte array to bitmap
     // this is needed when data from database is retrieved
-    public static Bitmap getImage(byte[] image) {
+    public Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }
