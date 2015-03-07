@@ -56,8 +56,15 @@ public class MainActivity extends Activity {
         //waits until Button bMyAss is pressed
         MyAssignments.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-                Intent openMyAssignments = new Intent(getApplicationContext(), MyAssignmentsActivity.class);
-                startActivity(openMyAssignments);
+                /*Intent openMyAssignments = new Intent(getApplicationContext(), MyAssignmentsActivity.class);
+                startActivity(openMyAssignments);*/
+                Assignment assignment = datasource.getAssignmentById("54f4d1f4e4b06b3e0d0aa0ad");
+                User user = datasource.getUserByUserId(assignment.getUserId());
+                InspectionObject inspectionObject = datasource.getInspectionObjectById(assignment.getInspectionObjectId());
+                List <Task> taskList = datasource.getTasksByAssignmentId(assignment.getId());
+                assignment.setState(0);
+                String parsed = parser.completeAssignmentToJson(assignment, taskList, user, inspectionObject);
+                restInstance.putToHerokuServer("assignment/54f4d1f4e4b06b3e0d0aa0ad", parsed);
             }
         });
 

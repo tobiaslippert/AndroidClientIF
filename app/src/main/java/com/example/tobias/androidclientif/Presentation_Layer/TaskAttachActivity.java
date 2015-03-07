@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 
-
+import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
 import com.example.tobias.androidclientif.R;
 
 
@@ -27,6 +27,9 @@ public class TaskAttachActivity extends Activity {
     Button Butt;
     ImageView IMG;
     int REQUEST_IMAGE_CAPTURE =1;
+    private MySQLiteHelper datasource;
+
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
