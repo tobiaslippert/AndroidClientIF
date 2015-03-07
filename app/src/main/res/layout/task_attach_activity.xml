@@ -43,6 +43,7 @@
         android:layout_gravity="center_horizontal"
         android:background="#FFFFFF"
         android:layout_weight="0.07"
+        android:src="@drawable/came"
         />
 
     <Button
@@ -57,7 +58,7 @@
         android:layout_width="203dp"
         android:layout_height="wrap_content"
         android:text="SAVE"
-        android:id="@+id/button"
+        android:id="@+id/save"
         android:layout_gravity="center_horizontal"
         android:background="#ECCF38"
         android:layout_weight="0.17" />

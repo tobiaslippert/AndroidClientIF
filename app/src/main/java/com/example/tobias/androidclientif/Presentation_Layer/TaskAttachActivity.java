@@ -24,7 +24,7 @@ import com.example.tobias.androidclientif.R;
 public class TaskAttachActivity extends Activity {
     Spinner spinner;
     String[] Str = {"Picture","Audio"};
-    Button Butt;
+    Button Butt, Save;
     ImageView IMG;
     int REQUEST_IMAGE_CAPTURE =1;
     private MySQLiteHelper datasource;
@@ -48,6 +48,15 @@ public class TaskAttachActivity extends Activity {
 
             }
         });
+
+        Save = (Button)findViewById(R.id.save);
+        Save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     private void dispatchTakePictureIntent() {
@@ -64,5 +73,6 @@ public class TaskAttachActivity extends Activity {
             IMG.setImageBitmap(imageBitmap);
         }
     }
+
 
 }
