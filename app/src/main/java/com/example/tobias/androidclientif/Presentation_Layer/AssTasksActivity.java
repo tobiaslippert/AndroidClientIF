@@ -31,10 +31,7 @@ public class AssTasksActivity extends Activity{
         datasource = new MySQLiteHelper(getApplicationContext());
         listViewAssTasks = (ListView) findViewById(R.id.lvAssTasks);
 
-        for (int i = 0; i < datasource.getAllTasks().size(); i++){
-            taskList.add(datasource.getAllTasks().get(i).getTaskName());
-        }
-        ListAdapter listenAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, taskList);
+        CustomAdapter_Task listenAdapter = new CustomAdapter_Task(this, datasource.getAllTasks());
         listViewAssTasks.setAdapter(listenAdapter);
 
         listViewAssTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {

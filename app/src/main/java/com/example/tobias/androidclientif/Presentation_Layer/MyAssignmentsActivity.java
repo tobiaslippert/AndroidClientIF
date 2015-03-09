@@ -35,16 +35,8 @@ public class MyAssignmentsActivity extends Activity {
         listViewMyAss = (ListView) findViewById(R.id.lvMyAss);
         //load all assignments from the database to the list listWithAllStoredAssigmments
         listWithAllStoredAssignments = datasource.getAllAssignments();
-        listOutput = new ArrayList<>();
 
-            for (int i = 0; i < listWithAllStoredAssignments.size(); i++){
-                Assignment assignment = listWithAllStoredAssignments.get(i);
-                String assignmentName = assignment.getAssignmentName();
-                listOutput.add(assignmentName);
-                System.out.println(assignmentName);
-            }
-
-        ListAdapter listenAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOutput);
+        CustomAdapter_Assignment listenAdapter = new CustomAdapter_Assignment(this, listWithAllStoredAssignments);
         listViewMyAss.setAdapter(listenAdapter);
         listViewMyAss.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -22,8 +22,7 @@ import com.example.tobias.androidclientif.R;
  * Created by MElke_000 on 2/28/2015.
  */
 public class TaskAttachActivity extends Activity {
-    Spinner spinner;
-    String[] Str = {"Picture","Audio"};
+
     Button Butt, Save;
     ImageView IMG;
     int REQUEST_IMAGE_CAPTURE =1;
@@ -32,9 +31,7 @@ public class TaskAttachActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_attach_activity);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(TaskAttachActivity.this, android.R.layout.simple_spinner_item, Str);
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(adapter);
+
         Butt = (Button)findViewById(R.id.button_Pic);
         IMG = (ImageView)findViewById(R.id.imageView_Pic);
         Butt.setOnClickListener(new View.OnClickListener() {
