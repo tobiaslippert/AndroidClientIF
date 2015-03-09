@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 
-
+import com.example.tobias.androidclientif.Application_Layer.BitmapUtility;
+import com.example.tobias.androidclientif.Entities.Attachment;
+import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
 import com.example.tobias.androidclientif.R;
 
 
@@ -26,6 +28,9 @@ public class TaskAttachActivity extends Activity {
     Button Butt, Save;
     ImageView IMG;
     int REQUEST_IMAGE_CAPTURE =1;
+    private MySQLiteHelper datasource;
+    Bitmap imageBitmap;
+    BitmapUtility bitmapUtility;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,10 @@ public class TaskAttachActivity extends Activity {
         Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Attachment attachment = new Attachment();
+                //The imagebitmap is transferred to byte[] before storing it to the database
+                attachment.setBinaryObject(bitmapUtility.getBytes(imageBitmap));
+                datasource.createAttachment(attachment);
             }
         });
 
@@ -63,7 +71,7 @@ public class TaskAttachActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageBitmap = (Bitmap) extras.get("data");
             IMG.setImageBitmap(imageBitmap);
         }
     }

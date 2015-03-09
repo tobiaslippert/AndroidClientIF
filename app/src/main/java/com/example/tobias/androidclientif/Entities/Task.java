@@ -11,6 +11,7 @@ public class Task {
     String description;
     Integer state;
     String assignmentId;
+    String errorDescription;
 
     //Constructor
     public Task(){
@@ -19,6 +20,9 @@ public class Task {
 
     //Setter
 
+    public void setErrorDescription(String errorDescription) {
+        this.errorDescription = errorDescription;
+    }
 
     public void setAssignmentId(String assignmentId) {
         this.assignmentId = assignmentId;
@@ -42,6 +46,9 @@ public class Task {
 
     //Getter
 
+    public String getErrorDescription() {
+        return errorDescription;
+    }
 
     public String getAssignmentId() {
         return assignmentId;

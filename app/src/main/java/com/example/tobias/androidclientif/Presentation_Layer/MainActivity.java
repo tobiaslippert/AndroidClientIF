@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
             public void onClick(View view){
                 Intent openMyAssignments = new Intent(getApplicationContext(), MyAssignmentsActivity.class);
                 startActivity(openMyAssignments);
+
             }
         });
 
