@@ -24,10 +24,17 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
@@ -164,29 +171,33 @@ public class HttpCustomClient {
     return status;
     }
 
-    public void postAttachmentToHerokuServer(String uri, byte[] imageByte){
+    //Post an attachment as a byte[] to the server
+    public void postAttachmentToHerokuServer(String assignmentId, String taskId, byte[] imageByte) {
         //declaration
         StringBuilder stringBuilder = new StringBuilder();
 
         //Allow internet connection
         StrictMode.ThreadPolicy policy = new StrictMode.
-        ThreadPolicy.Builder().permitAll().build();
+                ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        //Set URL for post-request
-        HttpEntityEnclosingRequestBase httpPost = new HttpPost("https://inspection-framework.herokuapp.com/"+uri);
-
-        //creates a new MultipartEntity and sets the browser policy
+        String URL = "http://inspection-framework.herokuapp.com/assignment" + "/" + assignmentId + "/" + "task" + "/" +taskId+ "/" + "attachment";
+        // Set URL for post-request
+        HttpEntityEnclosingRequestBase httpPost = new
+                HttpPost(URL);
+        // creates a new MultipartEntity and sets the browser policy
         MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
         multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-        //Create a new inputStreamBody and add the bytearray(picture) to it
-        //Give names for the picture
-        InputStreamBody inputStreamBody = new InputStreamBody(new ByteArrayInputStream(imageByte), "Pic.jpg");
-
-        //Add the filebody to the multipartEntity
-        //Specified from serverside it must be "fileUpload
+        // Create a new inputStreamBody and add the bytearray(picture) to it
+        // Give names for the picture
+        InputStreamBody inputStreamBody = new InputStreamBody(new
+                ByteArrayInputStream(imageByte), "Pic.jpg");
+        //
+        // Add the filebody to the multipartEntity
+        // Specified from serverside it must be "fileUpload
         multipartEntity.addPart("fileUpload", inputStreamBody);
+        //
+        //
 
         try {
 
@@ -208,6 +219,7 @@ public class HttpCustomClient {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     stringBuilder.append(line);
+                    System.out.println(line);
                 }
             } else {
                 Log.e(ParseJSON.class.toString(), "Upload not possible!");
@@ -217,8 +229,9 @@ public class HttpCustomClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
+
 
     //Putmethod
     //Receives the URI where the object should be put at and the String

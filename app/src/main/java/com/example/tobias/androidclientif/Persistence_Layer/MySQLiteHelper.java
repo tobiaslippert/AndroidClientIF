@@ -40,6 +40,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String A_COLUMN_INSPECTIONOBJECT_ID = "inspectionObjectId";
         public static final String A_COLUMN_ISTEMPLATE = "isTemplate";
         public static final String A_COLUMN_STATE = "state";
+        public static final String A_COLUMN_VERSION = "version";
 
         //Column names table tasks
         public static final String T_COLUMN_ROWID = "_id";
@@ -87,7 +88,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
                 + TABLE_ASSIGNMENTS + "(" + A_COLUMN_ROWID + " INTEGER, " + A_COLUMN_ASSIGNMENT_ID + " TEXT PRIMARY KEY UNIQUE, "
                 + A_COLUMN_DESCRIPTION + " TEXT, " + A_COLUMN_ASSIGNMENTNAME + " TEXT, " + A_COLUMN_STARTDATE + " INTEGER, " + A_COLUMN_ENDDATE + " INTEGER, "
-                + A_COLUMN_ISTEMPLATE + " TEXT, " + A_COLUMN_INSPECTIONOBJECT_ID + " TEXT, "  + A_COLUMN_USER_ID + " TEXT, " + A_COLUMN_STATE + " TEXT)";
+                + A_COLUMN_ISTEMPLATE + " TEXT, " + A_COLUMN_INSPECTIONOBJECT_ID + " TEXT, "  + A_COLUMN_USER_ID + " TEXT, " + A_COLUMN_STATE + " TEXT, " + A_COLUMN_VERSION + " INTEGER)";
 
         //Task Table creation sql statement
         private static final String CREATE_TABLE_TASKS = "CREATE TABLE "
@@ -169,6 +170,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                 values.put(MySQLiteHelper.A_COLUMN_INSPECTIONOBJECT_ID, assignment.getInspectionObjectId());
                 values.put(MySQLiteHelper.A_COLUMN_USER_ID, assignment.getUserId());
                 values.put(MySQLiteHelper.A_COLUMN_STATE, assignment.getState());
+                values.put(MySQLiteHelper.A_COLUMN_VERSION, assignment.getVersion());
 
                 //insert row
                 long insertId = database.insert(MySQLiteHelper.TABLE_ASSIGNMENTS, null,
@@ -246,6 +248,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                     assignment.setState((c.getInt(c.getColumnIndex(A_COLUMN_STATE))));
                     assignment.setInspectionObjectId((c.getString(c.getColumnIndex(A_COLUMN_INSPECTIONOBJECT_ID))));
                     assignment.setUserId((c.getString(c.getColumnIndex(A_COLUMN_USER_ID))));
+                    assignment.setVersion(c.getInt(c.getColumnIndex(A_COLUMN_VERSION)));
                     // adding to assignment list
                     listAssignments.add(assignment);
                 } while (c.moveToNext());
@@ -271,7 +274,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             assignment.setUserId(c.getString(c.getColumnIndex(A_COLUMN_USER_ID)));
             assignment.setState((c.getInt(c.getColumnIndex(A_COLUMN_STATE))));
             assignment.setInspectionObjectId((c.getString(c.getColumnIndex(A_COLUMN_INSPECTIONOBJECT_ID))));
-            assignment.setUserId((c.getString(c.getColumnIndex(A_COLUMN_USER_ID))));
+            assignment.setVersion(c.getInt(c.getColumnIndex(A_COLUMN_VERSION)));
 
             db.close();
             return assignment;
@@ -291,6 +294,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(A_COLUMN_STARTDATE, assignment.getStartDate());
             values.put(A_COLUMN_ENDDATE, assignment.getDueDate());
             values.put(A_COLUMN_STATE, assignment.getState());
+            values.put(MySQLiteHelper.A_COLUMN_VERSION, assignment.getVersion());
 
             // updating row
             return db.update(TABLE_ASSIGNMENTS, values, A_COLUMN_ROWID + " = ?",
@@ -300,7 +304,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Delete an assignment
         public void deleteAssignment(String assignmentId) {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(TABLE_ASSIGNMENTS, A_COLUMN_ROWID + " = ?",
+            db.delete(TABLE_ASSIGNMENTS, A_COLUMN_ASSIGNMENT_ID + " = ?",
                     new String[] { String.valueOf(assignmentId) });
         }
 
@@ -340,7 +344,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Delete an inspectionObject
         public void deleteInspectionObject(String objectId) {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(TABLE_INSPECTIONOBJECTS, I_COLUMN_ROWID + " = ?",
+            db.delete(TABLE_INSPECTIONOBJECTS, I_COLUMN_OBJECT_ID + " = ?",
                     new String[] { String.valueOf(objectId) });
         }
         //RUD-Methods for User
@@ -433,7 +437,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Delete a user
         public void deleteUser(String userId) {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(TABLE_USERS, U_COLUMN_ROWID + " = ?",
+            db.delete(TABLE_USERS, U_COLUMN_USER_ID + " = ?",
                     new String[] { String.valueOf(userId) });
         }
 
@@ -509,7 +513,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Delete a task
         public void deleteTask(String taskId) {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(TABLE_TASKS, T_COLUMN_ROWID + " = ?",
+            db.delete(TABLE_TASKS, T_COLUMN_TASK_ID + " = ?",
                     new String[] { String.valueOf(taskId) });
         }
 
@@ -594,7 +598,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Delete an attachment
         public void deleteAttachment(String attachmentId) {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(TABLE_ATTACHMENTS, AT_COLUMN_ROWID + " = ?",
+            db.delete(TABLE_ATTACHMENTS, AT_COLUMN_ATTACHMENT_ID + " = ?",
                     new String[] { String.valueOf(attachmentId) });
         }
 
