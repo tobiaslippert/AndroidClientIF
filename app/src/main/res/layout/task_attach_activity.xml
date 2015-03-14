@@ -16,7 +16,7 @@
     <EditText
         android:layout_width="348dp"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/problem_desc"
         android:background="#FFFFFF"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.13" />

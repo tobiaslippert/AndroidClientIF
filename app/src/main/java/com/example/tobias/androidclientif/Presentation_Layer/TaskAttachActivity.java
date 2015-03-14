@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 
 import com.example.tobias.androidclientif.Application_Layer.BitmapUtility;
@@ -35,6 +36,7 @@ public class TaskAttachActivity extends Activity {
     Bitmap imageBitmap;
     BitmapUtility bitmapUtility;
     HttpCustomClient client;
+    TextView Problem_Desc;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class TaskAttachActivity extends Activity {
         client = new HttpCustomClient();
         this.taskId = getIntent().getExtras().getString("TaskId");
         this.taskName = getIntent().getExtras().getString("TaskName");
+        Problem_Desc = (TextView) findViewById(R.id.problem_desc);
+
 
         Butt = (Button)findViewById(R.id.button_Pic);
         IMG = (ImageView)findViewById(R.id.imageView_Pic);
@@ -75,7 +79,7 @@ public class TaskAttachActivity extends Activity {
                 attachment1.setAssignmentId("54fe1bbbe4b0d176d07102f0");
                 attachment1.setBinaryObject(array);
                 //attachment1.setBinaryObject(datasource.getAttachmentPhotoByTaskId(attachment1.getTaskId()));
-                client.postAttachmentToHerokuServer(attachment1.getAssignmentId(),attachment1.getTaskId(), attachment1.getBinaryObject());
+                client.postAttachmentToHerokuServer(attachment1.getAssignmentId(), attachment1.getTaskId(), attachment1.getBinaryObject());
             }
         });
 
