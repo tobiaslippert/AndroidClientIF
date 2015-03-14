@@ -81,7 +81,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 11;
+        private static final int DATABASE_VERSION = 16;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -377,6 +377,25 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public User getUserByUserId(String userId){
             User user = new User();
             String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_USERS + " WHERE " + U_COLUMN_USER_ID + " = " + "'" + userId + "'";
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            c.moveToFirst();
+
+            user.setUserName(c.getString((c.getColumnIndex(U_COLUMN_USERNAME))));
+            user.setUserId(c.getString((c.getColumnIndex(U_COLUMN_USER_ID))));
+            user.setFirstName(c.getString((c.getColumnIndex(U_COLUMN_FIRSTNAME))));
+            user.setLastName(c.getString((c.getColumnIndex(U_COLUMN_LASTNAME))));
+            user.setEmail(c.getString((c.getColumnIndex(U_COLUMN_EMAIL))));
+            user.setRole(c.getString((c.getColumnIndex(U_COLUMN_ROLE))));
+            user.setMobileNumber(c.getString((c.getColumnIndex(U_COLUMN_MOBILENUMBER))));
+            user.setPhoneNumber(c.getString(c.getColumnIndex(U_COLUMN_PHONENUMBER)));
+
+            return user;
+        }
+
+        public User getUserByUserName(String userName){
+            User user = new User();
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_USERS + " WHERE " + U_COLUMN_USERNAME + " = " + "'" + userName + "'";
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             c.moveToFirst();

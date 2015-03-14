@@ -31,9 +31,11 @@ public class MainActivity extends Activity {
     private MySQLiteHelper datasource;
     private HttpCustomClient restInstance;
     private ParseJSON parser;
+    private String username;
     Button Download;
     Button MyAssignments;
     Button Logout;
+    User user;
 
 
     @Override
@@ -43,6 +45,7 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.username = getIntent().getExtras().getString("UserName");
 
         datasource = new MySQLiteHelper(getApplicationContext());
         restInstance = new HttpCustomClient();
@@ -50,6 +53,7 @@ public class MainActivity extends Activity {
         Download = (Button) findViewById(R.id.bDown);
         MyAssignments = (Button) findViewById(R.id.bMyAss);
         Logout = (Button) findViewById(R.id.bLog);
+        user = datasource.getUserByUserName(username);
 
 
 
@@ -100,8 +104,9 @@ public class MainActivity extends Activity {
                         e.printStackTrace();
                     }
 
-                    //Download all asignments from the server
-                    String inputAssignment = restInstance.readHerokuServer("assignment");
+                    //Download user assignments from the server based on their ids
+
+                    String inputAssignment = restInstance.readHerokuServer("assignment?user_id=" + user.getUserId());
                     System.out.println(inputAssignment);
                     try {
                         JSONArray jArray = new JSONArray(inputAssignment);

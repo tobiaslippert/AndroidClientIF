@@ -26,6 +26,7 @@ public class MyAssignmentsActivity extends Activity {
     private MySQLiteHelper datasource;
     private List<Assignment> listWithAllStoredAssignments;
     private List<String> listOutput;
+    CustomAdapter_Assignment listenAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -36,12 +37,15 @@ public class MyAssignmentsActivity extends Activity {
         //load all assignments from the database to the list listWithAllStoredAssigmments
         listWithAllStoredAssignments = datasource.getAllAssignments();
 
-        CustomAdapter_Assignment listenAdapter = new CustomAdapter_Assignment(this, listWithAllStoredAssignments);
+        listenAdapter = new CustomAdapter_Assignment(this, listWithAllStoredAssignments);
         listViewMyAss.setAdapter(listenAdapter);
         listViewMyAss.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Assignment clickedAssignment = listenAdapter.getClickedAssignment(position);
                 Intent openAssTask = new Intent(getApplicationContext(), AssTasksActivity.class);
+                openAssTask.putExtra("AssignmentName", clickedAssignment.getAssignmentName());
+                openAssTask.putExtra("AssignmentId", clickedAssignment.getId());
                 startActivity(openAssTask);
             }
         });

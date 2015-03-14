@@ -84,6 +84,7 @@ public class LoginActivity extends Activity{
                                 datasource.createUser(user);
                                 System.out.println(user.getUserName());
                                 Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
+                                openMenu.putExtra("UserName", username);
                                 startActivity(openMenu);
                             }
 

@@ -25,6 +25,8 @@ import com.example.tobias.androidclientif.R;
  */
 public class TaskAttachActivity extends Activity {
 
+    private String taskId;
+    private String taskName;
     Button Butt, Save;
     ImageView IMG;
     int REQUEST_IMAGE_CAPTURE =1;
@@ -33,12 +35,17 @@ public class TaskAttachActivity extends Activity {
     BitmapUtility bitmapUtility;
 
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_attach_activity);
 
+        this.taskId = getIntent().getExtras().getString("TaskId");
+        this.taskName = getIntent().getExtras().getString("TaskName");
+
         Butt = (Button)findViewById(R.id.button_Pic);
         IMG = (ImageView)findViewById(R.id.imageView_Pic);
+
         Butt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

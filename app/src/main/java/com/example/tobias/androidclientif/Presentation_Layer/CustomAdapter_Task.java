@@ -57,7 +57,7 @@ public class CustomAdapter_Task extends BaseAdapter {
     }
 
     //Gives the item per position (needed for ClickListener)
-    public Task getClickedAssignment(int position) {
+    public Task getClickedTask(int position) {
         return taskList.get(position);
     }
 

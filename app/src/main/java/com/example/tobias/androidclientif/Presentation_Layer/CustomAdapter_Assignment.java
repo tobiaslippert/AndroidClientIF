@@ -1,4 +1,5 @@
 package com.example.tobias.androidclientif.Presentation_Layer;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -50,8 +51,10 @@ public class CustomAdapter_Assignment extends BaseAdapter {
 
         Assignment assignment = assignmentList.get(position);
 
+        Date dueDate = new Date(assignment.getDueDate());
+
         Name.setText(assignment.getAssignmentName());
-        DueDate.setText(assignment.getDueDate().toString());
+        DueDate.setText(dueDate.toString());
 
         return convertView;
     }
