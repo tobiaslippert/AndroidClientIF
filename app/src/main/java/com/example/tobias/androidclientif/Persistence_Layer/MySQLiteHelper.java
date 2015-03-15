@@ -82,7 +82,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 16;
+        private static final int DATABASE_VERSION = 18;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
