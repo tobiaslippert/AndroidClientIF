@@ -494,6 +494,25 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             return taskList;
         }
 
+        //Get task by taskId
+        public Task getTaskByTaskId(String taskId) {
+            Task task = new Task();
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_TASKS + " WHERE " + T_COLUMN_TASK_ID + " = " + "'" + taskId + "'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+                    task.setId(c.getString((c.getColumnIndex(T_COLUMN_TASK_ID))));
+                    task.setTaskName(c.getString((c.getColumnIndex(T_COLUMN_TASKNAME))));
+                    task.setDescription(c.getString((c.getColumnIndex(T_COLUMN_DESCRIPTION))));
+                    task.setState(c.getInt(c.getColumnIndex(T_COLUMN_STATE)));
+                    task.setAssignmentId(c.getString(c.getColumnIndex(T_COLUMN_PK)));
+                    task.setErrorDescription(c.getString(c.getColumnIndex(T_COLUMN_ERROR_DESCRIPTION)));
+
+            db.close();
+            return task;
+        }
+
         //Update a task
         public int updateTask(Task task){
             SQLiteDatabase database = this.getWritableDatabase();
@@ -506,7 +525,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.T_COLUMN_PK, task.getAssignmentId());
             values.put(MySQLiteHelper.T_COLUMN_ERROR_DESCRIPTION, task.getErrorDescription());
 
-            return database.update(TABLE_TASKS, values, T_COLUMN_ROWID + " = ?",
+            return database.update(TABLE_TASKS, values, T_COLUMN_TASK_ID + " = ?",
                     new String[] { String.valueOf(task.getId()) });
         }
 
