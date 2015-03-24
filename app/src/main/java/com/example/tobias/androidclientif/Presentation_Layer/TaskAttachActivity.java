@@ -29,6 +29,7 @@ public class TaskAttachActivity extends Activity {
 
     private String taskId;
     private String taskName;
+    private String assignmentId;
     Button Butt, Save;
     ImageView IMG;
     int REQUEST_IMAGE_CAPTURE =1;
@@ -48,6 +49,7 @@ public class TaskAttachActivity extends Activity {
         client = new HttpCustomClient();
         this.taskId = getIntent().getExtras().getString("TaskId");
         this.taskName = getIntent().getExtras().getString("TaskName");
+        this.assignmentId = getIntent().getExtras().getString("AssignmentId");
         Problem_Desc = (TextView) findViewById(R.id.problem_desc);
 
 

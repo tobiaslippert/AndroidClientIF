@@ -82,7 +82,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 16;
+        private static final int DATABASE_VERSION = 17;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -497,8 +497,8 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //Update a task
         public int updateTask(Task task){
             SQLiteDatabase database = this.getWritableDatabase();
-
             ContentValues values = new ContentValues();
+
             values.put(MySQLiteHelper.T_COLUMN_TASK_ID, task.getId());
             values.put(MySQLiteHelper.T_COLUMN_TASKNAME, task.getTaskName());
             values.put(MySQLiteHelper.T_COLUMN_DESCRIPTION, task.getDescription());
@@ -506,9 +506,11 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.T_COLUMN_PK, task.getAssignmentId());
             values.put(MySQLiteHelper.T_COLUMN_ERROR_DESCRIPTION, task.getErrorDescription());
 
-            return database.update(TABLE_TASKS, values, T_COLUMN_ROWID + " = ?",
+            return database.update(TABLE_TASKS, values, T_COLUMN_TASK_ID + " = ?",
                     new String[] { String.valueOf(task.getId()) });
         }
+
+
 
         //Delete a task
         public void deleteTask(String taskId) {

@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
@@ -23,7 +25,7 @@ import java.util.List;
 public class AssTasksActivity extends Activity{
     private String assignmentId;
     private String assignmentName;
-    private List<String> taskList = new ArrayList<>();
+    private List<Task> taskList = new ArrayList<>();
     private MySQLiteHelper datasource;
     ListView listViewAssTasks;
     CustomAdapter_Task listenAdapter;
@@ -41,8 +43,7 @@ public class AssTasksActivity extends Activity{
         // Adjust Action Bar title
         //ActionBar actionBar = getActionBar();
         //actionBar.setTitle(getString(R.string.title_activity_task_list) + ": " + assignmentName);
-
-
+        taskList = datasource.getTasksByAssignmentId(assignmentId);
         listenAdapter = new CustomAdapter_Task(this, datasource.getTasksByAssignmentId(assignmentId));
         listViewAssTasks.setAdapter(listenAdapter);
 
@@ -53,8 +54,35 @@ public class AssTasksActivity extends Activity{
                 Intent openTaskAttach = new Intent(getApplicationContext(), TaskAttachActivity.class);
                 openTaskAttach.putExtra("TaskName", clickedTask.getTaskName());
                 openTaskAttach.putExtra("TaskId", clickedTask.getId());
+                openTaskAttach.putExtra("AssignmentId", assignmentId);
                 startActivity(openTaskAttach);
             }
         });
     }
-}
+    /*@Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        int pos = listViewAssTasks.getPositionForView(buttonView);
+
+        if (pos != ListView.INVALID_POSITION) {
+            Task t = taskList.get(pos);
+            if(t.getState()==1) {
+                t.setState(0);
+                datasource.updateTask(t);
+                Toast.makeText(getApplicationContext(), "state 0 set",
+                        Toast.LENGTH_LONG).show();
+            }
+            else{
+                t.setState(1);
+                datasource.updateTask(t);
+                Toast.makeText(getApplicationContext(), "state 1 set",
+                        Toast.LENGTH_LONG).show();
+            }
+
+            Toast T;
+
+        }
+
+        }*/
+
+
+    }
