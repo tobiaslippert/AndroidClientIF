@@ -81,7 +81,6 @@ public class CustomAdapter_Task extends BaseAdapter {
                     Ta.setState(0);
 
                     datasource.updateTask(Ta);
-                    //Toast T;
                     Toast.makeText(context, "State set to 0",
                             Toast.LENGTH_LONG).show();
                 }
