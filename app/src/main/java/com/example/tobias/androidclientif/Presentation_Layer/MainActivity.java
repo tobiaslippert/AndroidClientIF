@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.username = getIntent().getExtras().getString("UserName");
+        System.out.println(username);
 
         datasource = new MySQLiteHelper(getApplicationContext());
         restInstance = new HttpCustomClient();
