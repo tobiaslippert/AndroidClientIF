@@ -33,6 +33,7 @@
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
         android:layout_alignLeft="@+id/imageView1"
+        android:inputType="textPersonName"
         android:ems="10"
         android:textColor="#FFFFFF"/>
 
@@ -67,9 +68,9 @@
         android:layout_alignRight="@+id/editText2"
         android:layout_below="@+id/editText2"
         android:layout_marginTop="16dp"
-        android:layout_toRightOf="@+id/textView4"
         android:text="Login"
-        android:textColor="#FFFFFF"/>
+        android:textColor="#FFFFFF"
+        android:layout_toEndOf="@+id/imageView1" />
 
     <ImageView
         android:id="@+id/imageView3"

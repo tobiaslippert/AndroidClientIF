@@ -4,6 +4,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +15,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
 import com.example.tobias.androidclientif.R;
@@ -46,8 +50,9 @@ public class AssTasksActivity extends Activity{
         taskList = datasource.getTasksByAssignmentId(assignmentId);
         listenAdapter = new CustomAdapter_Task(this, datasource.getTasksByAssignmentId(assignmentId));
         listViewAssTasks.setAdapter(listenAdapter);
+        registerForContextMenu(listViewAssTasks);
 
-        listViewAssTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listViewAssTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Task clickedTask = listenAdapter.getClickedTask(position);
@@ -57,8 +62,34 @@ public class AssTasksActivity extends Activity{
                 openTaskAttach.putExtra("AssignmentId", assignmentId);
                 startActivity(openTaskAttach);
             }
-        });
+        });*/
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+            menu.setHeaderTitle("Task Menu");
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.task_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch(item.getItemId()) {
+            case R.id.Task_Attachment:
+                Task clickedTask = listenAdapter.getClickedTask(info.position);
+                Intent openTaskAttach = new Intent(getApplicationContext(), TaskAttachActivity.class);
+                openTaskAttach.putExtra("TaskName", clickedTask.getTaskName());
+                openTaskAttach.putExtra("TaskId", clickedTask.getId());
+                openTaskAttach.putExtra("AssignmentId", assignmentId);
+                startActivity(openTaskAttach);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
     /*@Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int pos = listViewAssTasks.getPositionForView(buttonView);

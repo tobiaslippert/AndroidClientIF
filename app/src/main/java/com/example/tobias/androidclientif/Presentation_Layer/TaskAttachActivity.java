@@ -54,9 +54,9 @@ public class TaskAttachActivity extends Activity {
         Problem_Desc = (TextView) findViewById(R.id.problem_desc);
 
 
-        Butt = (Button)findViewById(R.id.button_Pic);
+        //Butt = (Button)findViewById(R.id.button_Pic);
         IMG = (ImageView)findViewById(R.id.imageView_Pic);
-        Butt.setOnClickListener(new View.OnClickListener() {
+        IMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -83,8 +83,10 @@ public class TaskAttachActivity extends Activity {
                     attachment.setBinaryObject(array);
                     attachment.setTaskId(taskId);
                     datasource.createAttachment(attachment);
+                    task.setState(1);
                 }
                 else{
+
                     System.out.println("No attachment created and saved, because no picture has been taken");
                 }
             }

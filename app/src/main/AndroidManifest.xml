@@ -45,6 +45,11 @@
             android:label="Task Attachment">
         </activity>
 
+        <activity
+            android:name=".Presentation_Layer.AssignmentDetailsActivity"
+            android:label="Assignment Details">
+        </activity>
+
     </application>
 
 </manifest>
