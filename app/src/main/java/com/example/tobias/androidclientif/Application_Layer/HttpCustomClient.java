@@ -66,7 +66,7 @@ public class HttpCustomClient {
     private Context context;
     public HttpClient client = new DefaultHttpClient();
     public CookieStore store = ((DefaultHttpClient) client).getCookieStore();
-
+    private HttpResponse response;
 
     //Constructor
     public HttpCustomClient() {
@@ -184,6 +184,7 @@ public class HttpCustomClient {
         // Set URL for post-request
         HttpEntityEnclosingRequestBase httpPost = new
                 HttpPost(URL);
+
         // creates a new MultipartEntity and sets the browser policy
         MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
         multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -236,7 +237,7 @@ public class HttpCustomClient {
     //Putmethod
     //Receives the URI where the object should be put at and the String
     //Should be used than an existing object of the server database should be updated
-    public void putToHerokuServer(String uri, String jsonObject){
+    public Integer putToHerokuServer(String uri, String jsonObject, String Id){
         JSONObject jO;
 
         //Allow internet connection
@@ -244,7 +245,7 @@ public class HttpCustomClient {
         ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //set URL for Put-request
-        HttpPut httpPut = new HttpPut("https://inspection-framework.herokuapp.com/"+uri);
+        HttpPut httpPut = new HttpPut("https://inspection-framework.herokuapp.com/"+uri+Id);
 
         //Create a new JSONObject from the given String
         try {
@@ -258,7 +259,7 @@ public class HttpCustomClient {
                 httpPut.setHeader("Accept", "application/json");
                 httpPut.setHeader("Content-type", "application/json");
                 try {
-                    client.execute(httpPut);
+                   response = client.execute(httpPut);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -268,7 +269,9 @@ public class HttpCustomClient {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return (Integer) response.getStatusLine().getStatusCode();
     }
+
 
 }
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.tobias.androidclientif.Application_Layer.ApplicationHelper;
 import com.example.tobias.androidclientif.Application_Layer.HttpCustomClient;
 import com.example.tobias.androidclientif.Application_Layer.InternetConnectionDetector;
 import com.example.tobias.androidclientif.Entities.User;
@@ -35,6 +36,7 @@ public class LoginActivity extends Activity{
     EditText editTextUserName;
     EditText editPassword;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,7 @@ public class LoginActivity extends Activity{
         datasource = new MySQLiteHelper(getApplicationContext());
         clientInstance = new HttpCustomClient();
         icd = new InternetConnectionDetector(getApplicationContext());
+
         //download the JSON String with all users from the server
         //store the JSON String into the variable user
 
@@ -85,6 +88,7 @@ public class LoginActivity extends Activity{
                                 System.out.println(user.getUserName());
                                 Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
                                 openMenu.putExtra("UserName", username);
+                                //applicationHelper.setUser(user.getUserId());
                                 startActivity(openMenu);
                             }
 

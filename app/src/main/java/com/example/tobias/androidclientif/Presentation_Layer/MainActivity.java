@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 
 
+import com.example.tobias.androidclientif.Application_Layer.ApplicationHelper;
 import com.example.tobias.androidclientif.Application_Layer.HttpCustomClient;
+import com.example.tobias.androidclientif.Application_Layer.SynchronizationHelper;
 import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.Entities.InspectionObject;
 import com.example.tobias.androidclientif.Entities.Task;
@@ -36,6 +38,7 @@ public class MainActivity extends Activity {
     Button MyAssignments;
     Button Logout;
     User user;
+    SynchronizationHelper synchronizationHelper;
 
 
     @Override
@@ -55,6 +58,8 @@ public class MainActivity extends Activity {
         MyAssignments = (Button) findViewById(R.id.bMyAss);
         Logout = (Button) findViewById(R.id.bLog);
         user = datasource.getUserByUserName(username);
+
+
 
 
 
@@ -82,7 +87,7 @@ public class MainActivity extends Activity {
             //Declaration what happens when buttons are pressed
             public void onClick(View view) {
 
-                    //Download all inspectionObjects from ther server
+                    /*//Download all inspectionObjects from ther server
                     String inputInspectionObjects = restInstance.readHerokuServer("inspectionobject");
 
                     try {
@@ -165,8 +170,11 @@ public class MainActivity extends Activity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-            }});
+            */
+                synchronizationHelper = new SynchronizationHelper();
+                synchronizationHelper.SynchronizeAssignments(getApplicationContext(), user.getUserId(), MainActivity.this);
+            }}
+            );
  }
 
 

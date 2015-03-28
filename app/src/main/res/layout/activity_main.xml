@@ -77,7 +77,7 @@
             android:layout_width="155dp"
             android:layout_height="130dp"
             android:background="@drawable/my_button"
-            android:text="Download"
+            android:text="Synchronize"
             android:drawableLeft="@drawable/download_last"/>
 
     </FrameLayout>

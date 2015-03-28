@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.tobias.androidclientif.Application_Layer.ApplicationHelper;
 import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.R;
 

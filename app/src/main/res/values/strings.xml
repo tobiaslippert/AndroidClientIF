@@ -3,5 +3,7 @@
 
     <string name="app_name">Assignments</string>
     <string name="action_settings">Settings</string>
-
+    <string name="toast_no_internet">No Internet connection available</string>
+    <string name="toast_sync_success">Synchronization finished!</string>
+    <string name="toast_sync_nosuccess">Synchronization not successful</string>
 </resources>

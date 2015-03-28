@@ -13,7 +13,8 @@
         android:layout_marginLeft="1sp"
         android:layout_marginRight="1sp"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView" />
+        android:layout_toEndOf="@+id/imageView"
+        android:textColor="#FFFFFF"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -35,7 +36,8 @@
         android:layout_marginLeft="3sp"
         android:layout_marginRight="3sp"
         android:layout_below="@+id/assignmentName"
-        android:layout_alignStart="@+id/assignmentName" />
+        android:layout_alignStart="@+id/assignmentName"
+        android:textColor="#FFFFFF"/>
 
 
 </RelativeLayout>

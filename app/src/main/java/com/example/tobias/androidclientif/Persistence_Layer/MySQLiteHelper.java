@@ -82,7 +82,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 16;
+        private static final int DATABASE_VERSION = 21;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -278,6 +278,36 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
             db.close();
             return assignment;
+        }
+
+        // Get all assignments for a given user ID
+        public List<Assignment> getAssignmentsByUserId(String ID) {
+            List<Assignment> listAssignments = new ArrayList<Assignment>();
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_ASSIGNMENTS + " WHERE " + A_COLUMN_USER_ID + " = " + "'" + ID + "'";
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    Assignment assignment = new Assignment();
+                    assignment.setId(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENT_ID))));
+                    assignment.setAssignmentName(c.getString((c.getColumnIndex(A_COLUMN_ASSIGNMENTNAME))));
+                    assignment.setDescription((c.getString(c.getColumnIndex(A_COLUMN_DESCRIPTION))));
+                    assignment.setStartDate((c.getLong(c.getColumnIndex(A_COLUMN_STARTDATE))));
+                    assignment.setDueDate((c.getLong(c.getColumnIndex(A_COLUMN_ENDDATE))));
+                    assignment.setIsTemplate((c.getString(c.getColumnIndex(A_COLUMN_ISTEMPLATE))));
+                    assignment.setState((c.getInt(c.getColumnIndex(A_COLUMN_STATE))));
+                    assignment.setInspectionObjectId((c.getString(c.getColumnIndex(A_COLUMN_INSPECTIONOBJECT_ID))));
+                    assignment.setUserId((c.getString(c.getColumnIndex(A_COLUMN_USER_ID))));
+                    assignment.setVersion(c.getInt(c.getColumnIndex(A_COLUMN_VERSION)));
+
+                    // adding to assignment list
+                    listAssignments.add(assignment);
+                } while (c.moveToNext());
+            }
+
+            return listAssignments;
         }
 
         //Update an assignment
@@ -494,6 +524,25 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             return taskList;
         }
 
+        //Get task by taskId
+        public Task getTaskByTaskId(String taskId) {
+            Task task = new Task();
+            String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_TASKS + " WHERE " + T_COLUMN_TASK_ID + " = " + "'" + taskId + "'";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+                    task.setId(c.getString((c.getColumnIndex(T_COLUMN_TASK_ID))));
+                    task.setTaskName(c.getString((c.getColumnIndex(T_COLUMN_TASKNAME))));
+                    task.setDescription(c.getString((c.getColumnIndex(T_COLUMN_DESCRIPTION))));
+                    task.setState(c.getInt(c.getColumnIndex(T_COLUMN_STATE)));
+                    task.setAssignmentId(c.getString(c.getColumnIndex(T_COLUMN_PK)));
+                    task.setErrorDescription(c.getString(c.getColumnIndex(T_COLUMN_ERROR_DESCRIPTION)));
+
+            db.close();
+            return task;
+        }
+
         //Update a task
         public int updateTask(Task task){
             SQLiteDatabase database = this.getWritableDatabase();
@@ -506,7 +555,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.T_COLUMN_PK, task.getAssignmentId());
             values.put(MySQLiteHelper.T_COLUMN_ERROR_DESCRIPTION, task.getErrorDescription());
 
-            return database.update(TABLE_TASKS, values, T_COLUMN_ROWID + " = ?",
+            return database.update(TABLE_TASKS, values, T_COLUMN_TASK_ID + " = ?",
                     new String[] { String.valueOf(task.getId()) });
         }
 
@@ -600,6 +649,18 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete(TABLE_ATTACHMENTS, AT_COLUMN_ATTACHMENT_ID + " = ?",
                     new String[] { String.valueOf(attachmentId) });
+        }
+
+        // Clean the database (delete everything inside)
+        public void cleanDatabase() {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_USERS, null, null);
+            db.delete(TABLE_ASSIGNMENTS, null, null);
+            db.delete(TABLE_ATTACHMENTS, null, null);
+            db.delete(TABLE_INSPECTIONOBJECTS, null, null);
+            db.delete(TABLE_TASKS, null, null);
+
+            db.close();
         }
 
         // closing database
