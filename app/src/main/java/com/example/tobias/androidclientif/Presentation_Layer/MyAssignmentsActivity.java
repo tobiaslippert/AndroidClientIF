@@ -1,7 +1,10 @@
 package com.example.tobias.androidclientif.Presentation_Layer;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +15,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.content.Intent;
 import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
@@ -23,7 +30,7 @@ import java.util.List;
 /**
  * Created by Tobias on 14.02.15.
  */
-public class MyAssignmentsActivity extends Activity {
+public class MyAssignmentsActivity extends Activity implements SearchView.OnQueryTextListener{
 
     //VAR-declaration
     ListView listViewMyAss;
@@ -32,11 +39,14 @@ public class MyAssignmentsActivity extends Activity {
     private List<String> listOutput;
     CustomAdapter_Assignment listenAdapter;
     String UserId;
+    SearchView searchView;
+    MenuItem searchMenuItem;
 
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myassignments_activity);
+
         this.UserId = getIntent().getExtras().getString("UserId");
         datasource = new MySQLiteHelper(getApplicationContext());
         listViewMyAss = (ListView) findViewById(R.id.lvMyAss);
@@ -45,6 +55,7 @@ public class MyAssignmentsActivity extends Activity {
 
         listenAdapter = new CustomAdapter_Assignment(this, listWithAllStoredAssignments);
         listViewMyAss.setAdapter(listenAdapter);
+        listViewMyAss.setTextFilterEnabled(true);
         registerForContextMenu(listViewMyAss);
 
         listViewMyAss.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,6 +80,41 @@ public class MyAssignmentsActivity extends Activity {
             }
         });*/
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar_search_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText)
+    {
+        // this is your adapter that will be filtered
+
+        listenAdapter.getFilter().filter(newText);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        return false;
+    }
+
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

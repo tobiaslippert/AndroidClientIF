@@ -1,12 +1,16 @@
 package com.example.tobias.androidclientif.Presentation_Layer;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.tobias.androidclientif.Application_Layer.ApplicationHelper;
@@ -14,9 +18,10 @@ import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.R;
 
 
-public class CustomAdapter_Assignment extends BaseAdapter {
+public class CustomAdapter_Assignment extends BaseAdapter implements Filterable {
 
     List<Assignment> assignmentList;
+    List<Assignment> assList;
     Context context;
 
     //Constructor; provides the needed context and list of assignments given by the calling method
@@ -24,6 +29,7 @@ public class CustomAdapter_Assignment extends BaseAdapter {
         super();
         this.context = activityContext;
         this.assignmentList = assignments;
+        this.assList = assignments;
     }
 
     @Override
@@ -63,6 +69,47 @@ public class CustomAdapter_Assignment extends BaseAdapter {
     //Gives the item per position (needed for ClickListener)
     public Assignment getClickedAssignment(int position) {
         return assignmentList.get(position);
+    }
+
+
+    @Override
+    public Filter getFilter() {
+
+        Filter filter = new Filter() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                assignmentList = (List<Assignment>) results.values;
+                notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                FilterResults results = new FilterResults();
+                ArrayList<Assignment> FilteredArrayNames = new ArrayList<Assignment>();
+
+                // perform your search here using the searchConstraint String.
+                List<Assignment> asslist = assList;
+                constraint = constraint.toString().toLowerCase();
+                for (int i = 0; i < asslist.size(); i++) {
+                    Assignment ass = asslist.get(i);
+                    if (ass.getAssignmentName().toLowerCase().contains(constraint.toString()))  {
+                        FilteredArrayNames.add(ass);
+                    }
+                }
+
+                results.count = FilteredArrayNames.size();
+                results.values = FilteredArrayNames;
+                //Log.e("VALUES", results.values.toString());
+
+                return results;
+            }
+        };
+
+        return filter;
     }
 
 }

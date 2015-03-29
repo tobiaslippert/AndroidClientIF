@@ -33,6 +33,8 @@
             android:name=".Presentation_Layer.MyAssignmentsActivity"
             android:label="Assignments" >
 
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
 
         <activity
