@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
         MyAssignments.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Intent openMyAssignments = new Intent(getApplicationContext(), MyAssignmentsActivity.class);
+                openMyAssignments.putExtra("UserId", user.getUserId());
                 startActivity(openMyAssignments);
 
             }

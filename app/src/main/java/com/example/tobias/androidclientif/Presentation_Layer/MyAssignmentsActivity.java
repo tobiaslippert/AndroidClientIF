@@ -31,15 +31,17 @@ public class MyAssignmentsActivity extends Activity {
     private List<Assignment> listWithAllStoredAssignments;
     private List<String> listOutput;
     CustomAdapter_Assignment listenAdapter;
+    String UserId;
 
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myassignments_activity);
+        this.UserId = getIntent().getExtras().getString("UserId");
         datasource = new MySQLiteHelper(getApplicationContext());
         listViewMyAss = (ListView) findViewById(R.id.lvMyAss);
         //load all assignments from the database to the list listWithAllStoredAssigmments
-        listWithAllStoredAssignments = datasource.getAllAssignments();
+        listWithAllStoredAssignments = datasource.getAssignmentsByUserId(UserId);
 
         listenAdapter = new CustomAdapter_Assignment(this, listWithAllStoredAssignments);
         listViewMyAss.setAdapter(listenAdapter);
