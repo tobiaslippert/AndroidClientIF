@@ -83,7 +83,7 @@ public class AssTasksActivity extends Activity{
                 openTaskAttach.putExtra("TaskName", clickedTask.getTaskName());
                 openTaskAttach.putExtra("TaskId", clickedTask.getId());
                 openTaskAttach.putExtra("AssignmentId", assignmentId);
-                startActivity(openTaskAttach);
+                startActivityForResult(openTaskAttach, 1);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -114,6 +114,14 @@ public class AssTasksActivity extends Activity{
         }
 
         }*/
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 
 
     }

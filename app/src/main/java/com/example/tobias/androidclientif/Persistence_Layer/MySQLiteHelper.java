@@ -82,7 +82,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 21;
+        private static final int DATABASE_VERSION = 22;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -528,12 +528,12 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public Task getTaskByTaskId(String taskId) {
             Task task = new Task();
             String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_TASKS + " WHERE " + T_COLUMN_TASK_ID + " = " + "'" + taskId + "'";
-
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
+            c.moveToFirst();
 
-                    task.setId(c.getString((c.getColumnIndex(T_COLUMN_TASK_ID))));
                     task.setTaskName(c.getString((c.getColumnIndex(T_COLUMN_TASKNAME))));
+                    task.setId(c.getString((c.getColumnIndex(T_COLUMN_TASK_ID))));
                     task.setDescription(c.getString((c.getColumnIndex(T_COLUMN_DESCRIPTION))));
                     task.setState(c.getInt(c.getColumnIndex(T_COLUMN_STATE)));
                     task.setAssignmentId(c.getString(c.getColumnIndex(T_COLUMN_PK)));
@@ -569,13 +569,12 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         //RUD-Methods for Attachment
         //Read an attachment by a given task ID
         public Attachment getAttachmentsByTaskId(String taskId) {
-
+            Attachment attachment = new Attachment();
             String selectQuery = "SELECT * FROM " + MySQLiteHelper.TABLE_ATTACHMENTS + " WHERE " + AT_COLUMN_FK_TASK_ID + " = " + "'" + taskId + "'";
-
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
+            c.moveToFirst();
 
-                    Attachment attachment = new Attachment();
                     attachment.setId(c.getString((c.getColumnIndex(AT_COLUMN_ATTACHMENT_ID))));
                     attachment.setBinaryObject(c.getBlob(c.getColumnIndex(AT_COLUMN_BINARY_OBJECT)));
                     attachment.setFile_type(c.getString((c.getColumnIndex(AT_COLUMN_FILE_TYPE))));
@@ -593,7 +592,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
 
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
-
+            c.moveToFirst();
             byte[] byteArray = (c.getBlob(c.getColumnIndex(AT_COLUMN_BINARY_OBJECT)));
 
             db.close();
