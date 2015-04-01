@@ -25,6 +25,8 @@ import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
 import com.example.tobias.androidclientif.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -41,6 +43,7 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
     String UserId;
     SearchView searchView;
     MenuItem searchMenuItem;
+    int checksort = 0;
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -136,6 +139,49 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
                 return true;
             default:
                 return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.sort:
+                /*;
+                for(int i=0; i<listWithAllStoredAssignments.size();i++){
+
+                }*/
+                if(checksort==0){
+                    List<Assignment> Sorted = listWithAllStoredAssignments;
+                    Collections.sort(Sorted, new CustomComparator());
+                    listenAdapter = new CustomAdapter_Assignment(this, Sorted);
+                    listViewMyAss.setAdapter(listenAdapter);
+                    listenAdapter.notifyDataSetChanged();
+                    item.setTitle("Unsort");
+                    checksort=1;
+                }
+                else{
+                    /*listenAdapter = new CustomAdapter_Assignment(this, listWithAllStoredAssignments);
+                    listViewMyAss.setAdapter(listenAdapter);
+                    listenAdapter.notifyDataSetChanged();
+                    item.setTitle("Sort by due date");
+                    checksort=0;*/
+                    finish();
+                    startActivity(getIntent());
+                }
+
+                return true;
+            case R.id.help:
+                Toast.makeText(getApplicationContext(), "help!!!!!!!!!!!!!",
+                        Toast.LENGTH_LONG).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public class CustomComparator implements Comparator<Assignment> {
+        @Override
+        public int compare(Assignment a1, Assignment a2) {
+            return a1.getDueDate().compareTo(a2.getDueDate());
         }
     }
 }

@@ -7,4 +7,12 @@
         android:showAsAction="ifRoom|collapseActionView"
         android:title="Assignments search">
     </item>
+
+    <item android:id="@+id/sort"
+        android:title="Sort by due date"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/help"
+        android:title="Help"
+        android:showAsAction="never" />
 </menu>
