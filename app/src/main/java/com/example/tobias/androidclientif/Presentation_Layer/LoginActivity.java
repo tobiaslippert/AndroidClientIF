@@ -85,7 +85,6 @@ public class LoginActivity extends Activity{
                                 user.setMobileNumber(jObject.get("mobileNumber").toString());
 
                                 datasource.createUser(user);
-                                System.out.println(user.getUserName());
                                 Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
                                 openMenu.putExtra("UserName", username);
                                 //applicationHelper.setUser(user.getUserId());

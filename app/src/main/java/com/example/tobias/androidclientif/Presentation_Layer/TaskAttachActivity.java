@@ -92,7 +92,7 @@ public class TaskAttachActivity extends Activity {
                 task.setErrorDescription(Problem_Desc.getText().toString());
                 task.setState(1);
                 datasource.updateTask(task);
-                Toast.makeText(getApplicationContext(), "Error desc updated",
+                Toast.makeText(getApplicationContext(), "Error description updated",
                         Toast.LENGTH_LONG).show();
 
 
