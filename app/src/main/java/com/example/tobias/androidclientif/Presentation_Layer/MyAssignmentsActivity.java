@@ -151,10 +151,10 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
 
                 }*/
                 if(checksort==0){
-                    List<Assignment> Sorted = listWithAllStoredAssignments;
-                    Collections.sort(Sorted, new CustomComparator());
-                    listenAdapter = new CustomAdapter_Assignment(this, Sorted);
-                    listViewMyAss.setAdapter(listenAdapter);
+                    //List<Assignment> Sorted = listWithAllStoredAssignments;
+                    Collections.sort(listWithAllStoredAssignments, new CustomComparator());
+                    //listenAdapter = new CustomAdapter_Assignment(this, Sorted);
+                    //listViewMyAss.setAdapter(listenAdapter);
                     listenAdapter.notifyDataSetChanged();
                     item.setTitle("Unsort");
                     checksort=1;

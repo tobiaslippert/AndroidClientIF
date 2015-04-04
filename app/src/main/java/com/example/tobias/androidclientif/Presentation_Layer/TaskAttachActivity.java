@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.tobias.androidclientif.Application_Layer.BitmapUtility;
 import com.example.tobias.androidclientif.Application_Layer.HttpCustomClient;
+import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.Entities.Attachment;
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
@@ -56,7 +57,14 @@ public class TaskAttachActivity extends Activity {
         this.taskName = getIntent().getExtras().getString("TaskName");
         this.assignmentId = getIntent().getExtras().getString("AssignmentId");
         Problem_Desc = (TextView) findViewById(R.id.problem_desc);
+        Save = (Button)findViewById(R.id.save);
         IMG = (ImageView)findViewById(R.id.imageView_Pic);
+
+        Assignment assignment = datasource.getAssignmentById(assignmentId);
+        if(assignment.getState()==2) {
+            Problem_Desc.setEnabled(false);
+            Save.setVisibility(View.GONE);
+        }
 
         task = datasource.getTaskByTaskId(taskId);
         if(task.getErrorDescription()!=null){
@@ -72,17 +80,18 @@ public class TaskAttachActivity extends Activity {
         }*/
 
         //Butt = (Button)findViewById(R.id.button_Pic);
+        if(assignment.getState()!=2) {
+            IMG.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-        IMG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                    dispatchTakePictureIntent();
 
-                dispatchTakePictureIntent();
+                }
+            });
+        }
 
-            }
-        });
 
-        Save = (Button)findViewById(R.id.save);
         Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,9 +2,12 @@ package com.example.tobias.androidclientif.Presentation_Layer;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +36,8 @@ public class AssTasksActivity extends Activity{
     private MySQLiteHelper datasource;
     ListView listViewAssTasks;
     CustomAdapter_Task listenAdapter;
+    Assignment assignment;
+    private Menu menu;
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,9 @@ public class AssTasksActivity extends Activity{
         // Set Variables
         this.assignmentId = getIntent().getExtras().getString("AssignmentId");
         this.assignmentName = getIntent().getExtras().getString("AssignmentName");
+
+        assignment = datasource.getAssignmentById(assignmentId);
+
 
         // Adjust Action Bar title
         //ActionBar actionBar = getActionBar();
@@ -63,6 +71,78 @@ public class AssTasksActivity extends Activity{
                 startActivity(openTaskAttach);
             }
         });*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.close:
+                if(assignment.getState()==2) {
+                    assignment.setState(1);
+                    datasource.updateAssignment(assignment);
+                    Toast.makeText(getApplicationContext(), assignment.getState().toString(),
+                            Toast.LENGTH_LONG).show();
+                    setOptionTitle();
+                    listenAdapter.notifyDataSetChanged();
+                }
+                else{
+                    List<Task> templist;
+                    templist = datasource.getTasksByAssignmentId(assignmentId);
+                    int complete=1;
+                    for(int i =0;i<templist.size();i++){
+                        if(templist.get(i).getState()!=1){
+                        complete=0;
+                        }
+                    }
+                    if(complete==1) {
+                        assignment.setState(2);
+                        datasource.updateAssignment(assignment);
+                        Toast.makeText(getApplicationContext(), assignment.getState().toString(),
+                                Toast.LENGTH_LONG).show();
+                        setOptionTitle();
+
+                        listenAdapter.notifyDataSetChanged();
+                    }
+                    else{
+                        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                        alertDialog.setTitle("Alert");
+                        alertDialog.setMessage("Some tasks are not checked. Please check all tasks before closing the assignment.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                }
+                return true;
+            case R.id.help_task:
+                Toast.makeText(getApplicationContext(), assignment.getState().toString(),
+                        Toast.LENGTH_LONG).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.task_action_bar_menu, menu);
+        setOptionTitle();
+        return true;
+    }
+
+    private void setOptionTitle()
+    {
+        MenuItem item = menu.findItem(R.id.close);
+        if(assignment.getState()==2){
+            item.setTitle("Edit assignment");
+        }
+        else{
+            item.setTitle("Close assignment");
+        }
     }
 
     @Override
@@ -89,6 +169,8 @@ public class AssTasksActivity extends Activity{
                 return super.onContextItemSelected(item);
         }
     }
+
+
 
     /*@Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

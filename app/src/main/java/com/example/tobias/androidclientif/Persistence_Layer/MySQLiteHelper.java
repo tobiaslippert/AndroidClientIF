@@ -327,7 +327,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.A_COLUMN_VERSION, assignment.getVersion());
 
             // updating row
-            return db.update(TABLE_ASSIGNMENTS, values, A_COLUMN_ROWID + " = ?",
+            return db.update(TABLE_ASSIGNMENTS, values, A_COLUMN_ASSIGNMENT_ID + " = ?",
                     new String[] { String.valueOf(assignment.getId()) });
         }
 

@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tobias.androidclientif.Entities.Assignment;
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
 import com.example.tobias.androidclientif.R;
@@ -61,8 +62,17 @@ public class CustomAdapter_Task extends BaseAdapter {
         Name.setText(task.getTaskName());
         Desc.setText(task.getDescription());
 
+        datasource = new MySQLiteHelper((AssTasksActivity) context);
+        Assignment TempAssignment = datasource.getAssignmentById(task.getAssignmentId());
+
         if(task.getState() == 1) {
             CB.setChecked(true);
+            if(TempAssignment.getState()==2){
+                CB.setEnabled(false);
+            }
+            else{
+                CB.setEnabled(true);
+            }
         } else {
             CB.setChecked(false);
         }
