@@ -14,14 +14,14 @@
         android:layout_marginLeft="1sp"
         android:layout_marginRight="1sp"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView"
+        android:layout_toEndOf="@+id/Assignment_imageView"
         android:textColor="#FFFFFF"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/checklist_smaller"
+        android:id="@+id/Assignment_imageView"
+        android:src="@drawable/checklist_finished"
         android:maxHeight="90dp"
         android:maxWidth="60dp"
         android:adjustViewBounds="true"

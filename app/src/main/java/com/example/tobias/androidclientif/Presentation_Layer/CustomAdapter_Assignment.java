@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tobias.androidclientif.Application_Layer.ApplicationHelper;
@@ -55,9 +56,16 @@ public class CustomAdapter_Assignment extends BaseAdapter implements Filterable 
         }
         TextView Name = (TextView) convertView.findViewById(R.id.assignmentName);
         TextView DueDate = (TextView) convertView.findViewById(R.id.assignmentDueDate);
-
+        ImageView AssignmentImage = (ImageView) convertView.findViewById(R.id.Assignment_imageView);
         Assignment assignment = assignmentList.get(position);
 
+
+        if(assignment.getState()!=2) {
+            AssignmentImage.setImageResource(R.drawable.checklist_not_finished);
+        }
+        else{
+            AssignmentImage.setImageResource(R.drawable.checklist_finished);
+        }
         Date dueDate = new Date(assignment.getDueDate());
 
         Name.setText(assignment.getAssignmentName());

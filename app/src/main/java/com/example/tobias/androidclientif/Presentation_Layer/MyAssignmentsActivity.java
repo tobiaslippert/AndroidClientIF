@@ -184,4 +184,11 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
             return a1.getDueDate().compareTo(a2.getDueDate());
         }
     }
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 }
