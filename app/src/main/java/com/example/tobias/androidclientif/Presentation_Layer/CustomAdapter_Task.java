@@ -91,13 +91,13 @@ public class CustomAdapter_Task extends BaseAdapter {
                     Ta.setState(0);
 
                     datasource.updateTask(Ta);
-                    Toast.makeText(context, "State set to 0",
+                    Toast.makeText(context, "Task unfinished",
                             Toast.LENGTH_LONG).show();
                 }
                 else{
                     Ta.setState(1);
                     datasource.updateTask(Ta);
-                    Toast.makeText(context, "State set to 1",
+                    Toast.makeText(context, "Task finished",
                             Toast.LENGTH_LONG).show();
                 }
             }

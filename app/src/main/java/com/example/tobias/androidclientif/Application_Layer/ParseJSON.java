@@ -64,6 +64,8 @@ public class ParseJSON {
                 jsonObject.put("id", task.getId());
                 jsonObject.put("taskName", task.getTaskName());
                 jsonObject.put("description", task.getDescription());
+                jsonObject.put("errorDescription", task.getErrorDescription());
+                jsonObject.put("assignmentVersion", null);
                 jsonObject.put("state", task.getState());
 
                 jsonArray.put(jsonObject);

@@ -70,7 +70,7 @@ public class SynchronizationHelper {
                     List<Task> taskList = datasource.getTasksByAssignmentId(assignment.getId());
 
                     putJObject = parser.completeAssignmentToJson(assignment, taskList, user, inspectionObject);
-
+                    System.out.println(putJObject);
                     Integer statusResponse = restInstance.putToHerokuServer("assignment", putJObject, assignment.getId());
 
                     // Gives the user to the choice to delete or keep the local
