@@ -1,9 +1,14 @@
 package com.example.tobias.androidclientif.Presentation_Layer;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -122,9 +127,9 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-            menu.setHeaderTitle("Assignment Menu");
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.assignment_context_menu, menu);
+        menu.setHeaderTitle("Assignment Menu");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.assignment_context_menu, menu);
     }
 
     @Override
@@ -137,9 +142,39 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
                 openAssDetails.putExtra("AssignmentId", clickedAssignment.getId());
                 startActivity(openAssDetails);
                 return true;
+
+            case R.id.Assignment_notification:
+                Assignment clickedAssignment2 = listenAdapter.getClickedAssignment(info.position);
+                Notification noti = new Notification.Builder(getApplicationContext())
+                        .setContentTitle("Reminder")
+                        .setContentText("Close and sync: "+clickedAssignment2.getAssignmentName())
+                        .setSmallIcon(R.drawable.if_gold_logo)
+                        .build();
+                scheduleNotification(noti, 10000, clickedAssignment2.getDueDate().intValue());
+                /*
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(0, noti);*/
+
+                //
+
+                return true;
+
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    private void scheduleNotification(Notification notification, int delay, int requestCode) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, requestCode);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
     @Override
@@ -148,7 +183,6 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
             case R.id.sort:
                 /*;
                 for(int i=0; i<listWithAllStoredAssignments.size();i++){
-
                 }*/
                 if(checksort==0){
                     //List<Assignment> Sorted = listWithAllStoredAssignments;

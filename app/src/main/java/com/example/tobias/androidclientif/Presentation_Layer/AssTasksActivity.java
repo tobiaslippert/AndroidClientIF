@@ -3,6 +3,8 @@ package com.example.tobias.androidclientif.Presentation_Layer;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -100,8 +102,21 @@ public class AssTasksActivity extends Activity{
                         Toast.makeText(getApplicationContext(), assignment.getState().toString(),
                                 Toast.LENGTH_LONG).show();
                         setOptionTitle();
-
                         listenAdapter.notifyDataSetChanged();
+
+                        //canceling notification when the assignment is closed
+                        Notification noti = new Notification.Builder(getApplicationContext())
+                                .setContentTitle("Reminder")
+                                .setContentText("you have set a reminder for the following assignment:"+assignment.getAssignmentName())
+                                .setSmallIcon(R.drawable.if_gold_logo)
+                                .build();
+                        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+                        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, assignment.getDueDate().intValue());
+                        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, noti);
+                        PendingIntent pendingIntent;
+                        PendingIntent.getBroadcast(this, assignment.getDueDate().intValue(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT).cancel();
+
+
                     }
                     else{
                         AlertDialog alertDialog = new AlertDialog.Builder(this).create();

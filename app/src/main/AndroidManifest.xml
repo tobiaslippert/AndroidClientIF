@@ -51,7 +51,7 @@
             android:name=".Presentation_Layer.AssignmentDetailsActivity"
             android:label="Assignment Details">
         </activity>
-
+        <receiver android:name=".Presentation_Layer.NotificationPublisher" />
     </application>
 
 </manifest>
