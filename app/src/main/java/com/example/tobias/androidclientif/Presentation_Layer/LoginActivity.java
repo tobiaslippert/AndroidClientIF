@@ -35,6 +35,7 @@ public class LoginActivity extends Activity{
     String user;
     EditText editTextUserName;
     EditText editPassword;
+    List<User> userList;
 
 
     @Override
@@ -57,11 +58,13 @@ public class LoginActivity extends Activity{
 
             @Override
             public void onClick(View v) {
+
                 boolean isOnline = icd.isConnectedToInternet();
                 String username = editTextUserName.getText().toString();
                 String password = editPassword.getText().toString();
+                userList = datasource.getAllCredentials();
 
-                if (isOnline == true) {
+                if (isOnline == true && isValidUser(username, password, userList) == false) {
                     boolean status = clientInstance.postToHerokuServer("login", username, password);
 
                     if (status == true) {
@@ -85,6 +88,8 @@ public class LoginActivity extends Activity{
                                 user.setMobileNumber(jObject.get("mobileNumber").toString());
 
                                 datasource.createUser(user);
+                                user.setPassword(password);
+                                datasource.createCredentials(user);
                                 Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
                                 openMenu.putExtra("UserName", username);
                                 //applicationHelper.setUser(user.getUserId());
@@ -114,11 +119,26 @@ public class LoginActivity extends Activity{
                                 });
                     }
                 }
-                else{
+
+                if (isOnline == false && isValidUser(username, password, userList) == true){
+                    Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
+                    openMenu.putExtra("UserName", username);
+                    //applicationHelper.setUser(user.getUserId());
+                    startActivity(openMenu);
+                }
+
+                if (isOnline == true && isValidUser(username, password, userList) == true){
+                    Intent openMenu = new Intent(getApplicationContext(), MainActivity.class);
+                    openMenu.putExtra("UserName", username);
+                    //applicationHelper.setUser(user.getUserId());
+                    startActivity(openMenu);
+                }
+
+                if (isOnline == false && isValidUser(username, password, userList) == false){
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
 
 
-                    dlgAlert.setMessage("No internet connection");
+                    dlgAlert.setMessage("No internet connection. Login not possible!");
                     dlgAlert.setTitle("Error Message...");
                     dlgAlert.setPositiveButton("OK", null);
                     dlgAlert.setCancelable(true);
@@ -142,17 +162,18 @@ public class LoginActivity extends Activity{
     //Compares a String with the entries of a List<String> in order to check, whether the String appears in the list
     //Returns true if the String appears in the list
     //Returns false if the string is not in the list
-    /*public boolean isValidUser(String username, String password, List<User> databaseEntry) {
+    public boolean isValidUser(String username, String tippedPassword, List<User> databaseEntry) {
 
         for (int i = 0; i < databaseEntry.size(); i++) {
             String userName = databaseEntry.get(i).getUserName();
-            if (userName.equals(fieldEntry)) {
+            String password = databaseEntry.get(i).getPassword();
+            if (userName.equals(username) && password.equals(tippedPassword)) {
                 return true;
             } else {
 
             }
         }
         return false;
-    }*/
+    }
  }
 

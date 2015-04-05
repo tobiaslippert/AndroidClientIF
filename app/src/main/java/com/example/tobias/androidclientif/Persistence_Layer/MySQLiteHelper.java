@@ -28,6 +28,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String TABLE_USERS = "users";
         public static final String TABLE_INSPECTIONOBJECTS = "inspectionobjects";
         public static final String TABLE_ATTACHMENTS = "attachments";
+        public static final String TABLE_CREDENTIALS = "credentials";
 
         //Column names table assignments
         public static final String A_COLUMN_ROWID = "_id";
@@ -63,6 +64,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String U_COLUMN_PHONENUMBER = "phoneNumber";
         public static final String U_COLUMN_MOBILENUMBER = "mobileNumber";
 
+
         //Column names table inspectionobjects
         public static final String I_COLUMN_ROWID = "_id";
         public static final String I_COLUMN_OBJECT_ID = "objectId";
@@ -79,10 +81,15 @@ package com.example.tobias.androidclientif.Persistence_Layer;
         public static final String AT_COLUMN_FK_TASK_ID = "fkTaskId";
         public static final String AT_COLUMN_FK_ASSIGNMENT_ID = "fkAssignmentId";
 
+        //Column names table credentials
+        public static final String C_COLUMN_ROWID = "_id";
+        public static final String C_COLUMN_USERNAME = "username";
+        public static final String C_COLUMN_PASSWORD = "password";
+
 
         //Database information
         private static final String DATABASE_NAME = "newTestDatabase.db";
-        private static final int DATABASE_VERSION = 22;
+        private static final int DATABASE_VERSION = 23;
 
         // Assignment Table creation sql statement
         private static final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE "
@@ -111,6 +118,11 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                 + TABLE_ATTACHMENTS + "(" + AT_COLUMN_ROWID + " INTEGER, " + AT_COLUMN_ATTACHMENT_ID + " TEXT PRIMARY KEY UNIQUE, " + AT_COLUMN_FILE_TYPE + " TEXT, "
                 + AT_COLUMN_BINARY_OBJECT + " BLOB, " + AT_COLUMN_FK_ASSIGNMENT_ID + " TEXT, " + AT_COLUMN_FK_TASK_ID + " TEXT, " + " FOREIGN KEY(fkTaskId) REFERENCES TABLE_TASKS(taskId))";
 
+        //Credentials table creation sql statement
+        private static final String CREATE_TABLE_CREDENTIALS = "CREATE TABLE "
+                + TABLE_CREDENTIALS + "(" + C_COLUMN_ROWID + " INTEGER, " + C_COLUMN_USERNAME + " TEXT PRIMARY KEY UNIQUE, "
+                + C_COLUMN_PASSWORD + " TEXT)";
+
         public MySQLiteHelper(Context context) {
                 super(context, DATABASE_NAME, null, DATABASE_VERSION);
             }
@@ -122,6 +134,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                 database.execSQL(CREATE_TABLE_USERS);
                 database.execSQL(CREATE_TABLE_INSPECTIONOBJECTS);
                 database.execSQL((CREATE_TABLE_ATTACHMENTS));
+                database.execSQL(CREATE_TABLE_CREDENTIALS);
             }
 
         @Override
@@ -134,6 +147,7 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_INSPECTIONOBJECTS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ATTACHMENTS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CREDENTIALS);
             onCreate(db);
         }
 
@@ -152,7 +166,20 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             values.put(MySQLiteHelper.U_COLUMN_MOBILENUMBER, user.getMobileNumber());
             values.put(MySQLiteHelper.U_COLUMN_PHONENUMBER, user.getPhoneNumber());
 
+
             long insertId = database.insert(MySQLiteHelper.TABLE_USERS, null, values);
+        }
+
+        //create a row credentials
+        public void createCredentials(User user){
+            SQLiteDatabase database = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(MySQLiteHelper.C_COLUMN_USERNAME, user.getUserName());
+            values.put(MySQLiteHelper.C_COLUMN_PASSWORD, user.getPassword());
+
+
+            long insertId = database.insert(MySQLiteHelper.TABLE_CREDENTIALS, null, values);
         }
 
         //create a row Assignment
@@ -648,6 +675,28 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete(TABLE_ATTACHMENTS, AT_COLUMN_ATTACHMENT_ID + " = ?",
                     new String[] { String.valueOf(attachmentId) });
+        }
+
+        //RUD-functions for credentials
+        public List<User> getAllCredentials() {
+            List<User> listCredentials = new ArrayList<>();
+            String selectQuery = "SELECT  * FROM " + MySQLiteHelper.TABLE_CREDENTIALS;
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    User user = new User();
+                    user.setUserName(c.getString((c.getColumnIndex(C_COLUMN_USERNAME))));
+                    user.setPassword(c.getString(c.getColumnIndex(C_COLUMN_PASSWORD)));
+
+                    // adding to assignment list
+                    listCredentials.add(user);
+                } while (c.moveToNext());
+            }
+
+            return listCredentials;
         }
 
         // Clean the database (delete everything inside)

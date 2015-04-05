@@ -14,6 +14,7 @@ public class User {
     String lastName;
     String phoneNumber;
     String mobileNumber;
+    String password;
 
 
     //Constructor
@@ -83,5 +84,13 @@ public class User {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
