@@ -1,7 +1,9 @@
 package com.example.tobias.androidclientif.Presentation_Layer;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,15 +86,44 @@ public class CustomAdapter_Task extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 datasource = new MySQLiteHelper((AssTasksActivity) context);
-                Task Ta = task;
+                final Task Ta = task;
 
                 if(Ta.getState()==1){
 
                     Ta.setState(0);
 
+                    if(!Ta.getErrorDescription().isEmpty()) {
+                        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
+                        dlgAlert.setMessage("This task has an error linked.\nDo you want to delete the error information?");
+                        dlgAlert.setTitle("Warning...");
+                        dlgAlert.setPositiveButton("No", null);
+                        dlgAlert.setNegativeButton("Yes", null);
+                        dlgAlert.setCancelable(false);
+                        dlgAlert.setPositiveButton("No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Toast.makeText(context, "No",
+                                                //Toast.LENGTH_LONG).show();
+                                        //Does Nothing
+                                    }
+                                });
+                        dlgAlert.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Ta.setErrorDescription("");
+                                datasource.updateTask(Ta);
+
+                                Toast.makeText(context, "Error was deleted",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        dlgAlert.create().show();
+
+                    }
                     datasource.updateTask(Ta);
                     Toast.makeText(context, "Task unfinished",
                             Toast.LENGTH_LONG).show();
+
+
                 }
                 else{
                     Ta.setState(1);
