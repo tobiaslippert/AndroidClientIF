@@ -89,8 +89,8 @@ public class TaskAttachActivity extends Activity {
         } catch (Exception e) {
         e.printStackTrace();
             NoPic=1;
-            Toast.makeText(getApplicationContext(), "problem encountred no pic "+NoPic,
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "problem encountred no pic "+NoPic,
+                    //Toast.LENGTH_LONG).show();
     }
 
         //Butt = (Button)findViewById(R.id.button_Pic);
