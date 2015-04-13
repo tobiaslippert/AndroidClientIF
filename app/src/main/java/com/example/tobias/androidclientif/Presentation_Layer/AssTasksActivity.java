@@ -133,8 +133,22 @@ public class AssTasksActivity extends Activity{
                 }
                 return true;
             case R.id.help_task:
-                Toast.makeText(getApplicationContext(), assignment.getState().toString(),
-                        Toast.LENGTH_LONG).show();
+                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(AssTasksActivity.this);
+
+                dlgAlert.setMessage("Instructions:\n\n-  Press and hold any task to access the contextual menu where you can access the attachment activity\n\n-  Press the menu button to close/edit the assignment\n" +
+                        "\n" +
+                        "-  Note: you cannot close an incomplete assignment or edit a closed one");
+                dlgAlert.setTitle("Help");
+                dlgAlert.setPositiveButton("OK", null);
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
+
+                dlgAlert.setPositiveButton("Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
                 return true;
         }
         return super.onOptionsItemSelected(item);

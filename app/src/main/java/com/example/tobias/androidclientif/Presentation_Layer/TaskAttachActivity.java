@@ -44,6 +44,7 @@ public class TaskAttachActivity extends Activity {
     TextView Problem_Desc;
     Task task;
     int Clicked = 0;
+    int NoPic=0;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +72,18 @@ public class TaskAttachActivity extends Activity {
             Problem_Desc.setText(task.getErrorDescription());
         }
 
-        /*if(datasource.getAttachmentPhotoByTaskId(taskId)!=null){
+        //if(datasource.getAttachmentPhotoByTaskId(taskId).length!=0){
+        try{
             byte[] B = datasource.getAttachmentPhotoByTaskId(taskId);
             Bitmap bitmap = BitmapFactory.decodeByteArray(B, 0, B.length);
             IMG.setImageBitmap(bitmap);
-            Toast.makeText(getApplicationContext(), datasource.getAttachmentPhotoByTaskId(taskId).toString(),
+
+        } catch (Exception e) {
+        e.printStackTrace();
+            NoPic=1;
+            Toast.makeText(getApplicationContext(), "problem encountred no pic "+NoPic,
                     Toast.LENGTH_LONG).show();
-        }*/
+    }
 
         //Butt = (Button)findViewById(R.id.button_Pic);
         if(assignment.getState()!=2) {
@@ -101,13 +107,12 @@ public class TaskAttachActivity extends Activity {
                 task.setErrorDescription(Problem_Desc.getText().toString());
                 task.setState(1);
                 datasource.updateTask(task);
-                Toast.makeText(getApplicationContext(), "Error description updated",
-                        Toast.LENGTH_LONG).show();
+
 
 
                 //Creating a new assignment and store it to the database
                 if (Clicked == 1) {
-                    Attachment attachment = new Attachment();
+
                     //The imagebitmap is transferred to byte[] before storing it to the database
                     //byte[] array = bitmapUtility.getBytes(imageBitmap);
                     IMG.buildDrawingCache();
@@ -116,19 +121,25 @@ public class TaskAttachActivity extends Activity {
                     bmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                     byte[] array = bos.toByteArray();
                     System.out.println(array);
+                    Attachment attachment = new Attachment();
+                    attachment.setAssignmentId(assignmentId);
+                    attachment.setFile_type("Photo");
                     attachment.setBinaryObject(array);
                     attachment.setTaskId(taskId);
-                    if(datasource.getAttachmentPhotoByTaskId(taskId)!=null){
-                        datasource.updateAttachment(attachment);
-                        Toast.makeText(getApplicationContext(), "Attachment Updated",
+                    if(NoPic==1) {
+                        datasource.createAttachment(attachment);
+                        Toast.makeText(getApplicationContext(), "Attachment created "+NoPic,
                                 Toast.LENGTH_LONG).show();
                     }
                     else{
+                        datasource.deleteAttachment(taskId);
                         datasource.createAttachment(attachment);
-                        Toast.makeText(getApplicationContext(), "Attachment created",
+                        //Attachment exatt = datasource.getAttachmentsByTaskId(taskId);
+                        //exatt.setBinaryObject(array);
+                        //datasource.updateAttachment(exatt);
+                        Toast.makeText(getApplicationContext(), "Attachment updated "+NoPic,
                                 Toast.LENGTH_LONG).show();
                     }
-
 
                 }
 

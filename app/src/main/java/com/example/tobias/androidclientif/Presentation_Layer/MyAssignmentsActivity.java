@@ -2,11 +2,13 @@ package com.example.tobias.androidclientif.Presentation_Layer;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -205,8 +207,20 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
 
                 return true;
             case R.id.help:
-                Toast.makeText(getApplicationContext(), "help!!!!!!!!!!!!!",
-                        Toast.LENGTH_LONG).show();
+                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(MyAssignmentsActivity.this);
+
+                dlgAlert.setMessage("Instructions:\n\n-  Press and hold any assignment to access the contextual menu where you can view details or set alerts\n\n-  Alert will be canceled if assignment is closed\n\n-  You can search and sort assignments in this activity");
+                dlgAlert.setTitle("Help");
+                dlgAlert.setPositiveButton("OK", null);
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
+
+                dlgAlert.setPositiveButton("Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
                 return true;
         }
         return super.onOptionsItemSelected(item);

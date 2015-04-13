@@ -662,19 +662,19 @@ package com.example.tobias.androidclientif.Persistence_Layer;
             ContentValues values = new ContentValues();
             values.put(MySQLiteHelper.AT_COLUMN_ATTACHMENT_ID, attachment.getId());
             values.put(MySQLiteHelper.AT_COLUMN_FILE_TYPE, attachment.getFile_type());
-            values.put(MySQLiteHelper.AT_COLUMN_BINARY_OBJECT, attachment.getBinaryObject().toString());
+            values.put(MySQLiteHelper.AT_COLUMN_BINARY_OBJECT, attachment.getBinaryObject());
             values.put(MySQLiteHelper.AT_COLUMN_FK_TASK_ID, attachment.getTaskId());
             values.put(MySQLiteHelper.AT_COLUMN_FK_ASSIGNMENT_ID, attachment.getAssignmentId());
 
-            return database.update(TABLE_ATTACHMENTS, values, AT_COLUMN_ROWID + " = ?",
+            return database.update(TABLE_ATTACHMENTS, values, AT_COLUMN_ATTACHMENT_ID + " = ?",
                     new String[] { String.valueOf(attachment.getId()) });
         }
 
         //Delete an attachment
-        public void deleteAttachment(String attachmentId) {
+        public void deleteAttachment(String taskId) {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(TABLE_ATTACHMENTS, AT_COLUMN_ATTACHMENT_ID + " = ?",
-                    new String[] { String.valueOf(attachmentId) });
+            db.delete(TABLE_ATTACHMENTS, AT_COLUMN_FK_TASK_ID + " = ?",
+                    new String[] { String.valueOf(taskId) });
         }
 
         //RUD-functions for credentials

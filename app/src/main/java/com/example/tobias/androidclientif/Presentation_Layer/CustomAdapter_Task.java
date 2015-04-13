@@ -111,6 +111,7 @@ public class CustomAdapter_Task extends BaseAdapter {
                             public void onClick(DialogInterface dialog, int which) {
                                 Ta.setErrorDescription("");
                                 datasource.updateTask(Ta);
+                                datasource.deleteAttachment(Ta.getId());
 
                                 Toast.makeText(context, "Error was deleted",
                                         Toast.LENGTH_LONG).show();
