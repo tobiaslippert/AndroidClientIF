@@ -36,8 +36,8 @@
         android:textColor="#FFFFFF" />
 
     <ImageView
-        android:layout_width="328dp"
-        android:layout_height="202dp"
+        android:layout_width="350dp"
+        android:layout_height="300dp"
         android:id="@+id/imageView_Pic"
         android:layout_gravity="center_horizontal"
         android:background="#046697"
