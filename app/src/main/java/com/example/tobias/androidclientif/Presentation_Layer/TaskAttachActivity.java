@@ -136,7 +136,7 @@ public class TaskAttachActivity extends Activity {
                     attachment.setTaskId(taskId);
                     if(NoPic==1) {
                         datasource.createAttachment(attachment);
-                        Toast.makeText(getApplicationContext(), "Attachment created "+NoPic,
+                        Toast.makeText(getApplicationContext(), "Attachment created ",
                                 Toast.LENGTH_LONG).show();
                     }
                     else{
@@ -145,7 +145,7 @@ public class TaskAttachActivity extends Activity {
                         //Attachment exatt = datasource.getAttachmentsByTaskId(taskId);
                         //exatt.setBinaryObject(array);
                         //datasource.updateAttachment(exatt);
-                        Toast.makeText(getApplicationContext(), "Attachment updated "+NoPic,
+                        Toast.makeText(getApplicationContext(), "Attachment updated ",
                                 Toast.LENGTH_LONG).show();
                     }
 
@@ -185,8 +185,8 @@ public class TaskAttachActivity extends Activity {
             //System.out.println(imageBitmap.toString());
             //IMG.setImageBitmap(imageBitmap);
             setPic();
-            Toast.makeText(getApplicationContext(), "Image Path: "+mCurrentPhotoPath,
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Image Path: "+mCurrentPhotoPath,
+                    //Toast.LENGTH_LONG).show();
             Clicked=1;
         }
     }
