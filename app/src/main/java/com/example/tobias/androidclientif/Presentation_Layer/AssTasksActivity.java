@@ -99,8 +99,8 @@ public class AssTasksActivity extends Activity{
                     //if(complete==1) {
                         assignment.setState(2);
                         datasource.updateAssignment(assignment);
-                        Toast.makeText(getApplicationContext(), assignment.getState().toString(),
-                                Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), assignment.getState().toString(),
+                                //Toast.LENGTH_LONG).show();
                         setOptionTitle();
                         listenAdapter.notifyDataSetChanged();
 
