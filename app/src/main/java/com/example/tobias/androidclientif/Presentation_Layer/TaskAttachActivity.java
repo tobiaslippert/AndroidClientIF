@@ -112,14 +112,10 @@ public class TaskAttachActivity extends Activity {
 
                 //Updating the task in the database
 
-                task.setErrorDescription(Problem_Desc.getText().toString());
-                task.setState(1);
-                datasource.updateTask(task);
-
 
 
                 //Creating a new assignment and store it to the database
-                if (Clicked == 1) {
+                if (Clicked == 1&&Problem_Desc.getText().length()!=0) {
 
                     //The imagebitmap is transferred to byte[] before storing it to the database
                     //byte[] array = bitmapUtility.getBytes(imageBitmap);
@@ -148,9 +144,23 @@ public class TaskAttachActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "Attachment updated ",
                                 Toast.LENGTH_LONG).show();
                     }
-
+                    task.setErrorDescription(Problem_Desc.getText().toString());
+                    task.setState(2);
+                    datasource.updateTask(task);
                 }
-
+                else if(Clicked == 1&&Problem_Desc.getText().length()==0){
+                    Toast.makeText(getApplicationContext(), "Problem description is empty, please fill it before saving",
+                            Toast.LENGTH_LONG).show();
+                }
+                else if(Clicked == 0&&Problem_Desc.getText().length()!=0){
+                    task.setErrorDescription(Problem_Desc.getText().toString());
+                    task.setState(2);
+                    datasource.updateTask(task);
+                }
+                else if(Problem_Desc.getText().length()==0){
+                    Toast.makeText(getApplicationContext(), "Problem description is empty, please fill it before saving",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 

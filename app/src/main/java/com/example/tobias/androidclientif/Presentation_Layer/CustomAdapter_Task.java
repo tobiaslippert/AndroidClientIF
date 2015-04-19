@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,10 @@ public class CustomAdapter_Task extends BaseAdapter {
 
     List<Task> taskList;
     Context context;
-    CheckBox CB;
+    //CheckBox CB;
+    RadioButton Ok;
+    RadioButton NotOk;
+    RadioGroup RG;
     private MySQLiteHelper datasource;
 
 
@@ -57,7 +62,10 @@ public class CustomAdapter_Task extends BaseAdapter {
 
         TextView Name = (TextView) convertView.findViewById(R.id.taskName);
         TextView Desc = (TextView) convertView.findViewById(R.id.taskDescription);
-        CB = (CheckBox) convertView.findViewById(R.id.checkBox);
+        //CB = (CheckBox) convertView.findViewById(R.id.checkBox);
+        Ok = (RadioButton) convertView.findViewById(R.id.radioOk);
+        NotOk = (RadioButton) convertView.findViewById(R.id.radioNotOk);
+        RG = (RadioGroup) convertView.findViewById(R.id.radioGroup);
 
 
         final Task task = taskList.get(position);
@@ -67,22 +75,77 @@ public class CustomAdapter_Task extends BaseAdapter {
         datasource = new MySQLiteHelper((AssTasksActivity) context);
         Assignment TempAssignment = datasource.getAssignmentById(task.getAssignmentId());
 
+        //Setting up the radioButtons (OK/NotOK)
         if(task.getState() == 1) {
-            CB.setChecked(true);
-            if(TempAssignment.getState()==2){
-                CB.setEnabled(false);
-            }
-            else{
-                CB.setEnabled(true);
-            }
-        } else {
-            CB.setChecked(false);
+            RG.check(R.id.radioOk);
+        } else if(task.getState() == 2) {
+            RG.check(R.id.radioNotOk);
+        }
+
+        //Enabling or disabling editing of taskstat according to assignment stat
+        if(TempAssignment.getState()==2){
+            Ok.setEnabled(false);
+            NotOk.setEnabled(false);
+        }
+        else{
+            Ok.setEnabled(true);
+            NotOk.setEnabled(true);
         }
 
 
 
+        Ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datasource = new MySQLiteHelper((AssTasksActivity) context);
+                final Task Ta = task;
+                //Ta.setState(1);
+                if(!Ta.getErrorDescription().isEmpty()) {
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
+                    dlgAlert.setMessage("This task has an error linked to it.\nDo you want to delete it?");
+                    dlgAlert.setTitle("Warning...");
+                    dlgAlert.setPositiveButton("No", null);
+                    dlgAlert.setNegativeButton("Yes", null);
+                    dlgAlert.setCancelable(false);
+                    dlgAlert.setPositiveButton("No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Ta.setState(1);
+                                    datasource.updateTask(Ta);
+                                }
+                            });
+                    dlgAlert.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Ta.setErrorDescription("");
+                            Ta.setState(1);
+                            datasource.updateTask(Ta);
+                            datasource.deleteAttachment(Ta.getId());
+                            Toast.makeText(context, "Error was deleted",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    dlgAlert.create().show();
+
+                }
+                else{
+                    Ta.setState(1);
+                    datasource.updateTask(Ta);
+                }
+
+            }
+        });
+
+        NotOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datasource = new MySQLiteHelper((AssTasksActivity) context);
+                final Task Ta = task;
+                Ta.setState(2);
+                datasource.updateTask(Ta);
+            }
+        });
         //CB.setOnCheckedChangeListener((AssTasksActivity) context);
-        CB.setOnClickListener(new View.OnClickListener() {
+        /*CB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 datasource = new MySQLiteHelper((AssTasksActivity) context);
@@ -133,7 +196,7 @@ public class CustomAdapter_Task extends BaseAdapter {
                             Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        });*/
 
 
         return convertView;

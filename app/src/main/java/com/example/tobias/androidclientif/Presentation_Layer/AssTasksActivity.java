@@ -88,15 +88,15 @@ public class AssTasksActivity extends Activity{
                     listenAdapter.notifyDataSetChanged();
                 }
                 else{
-                    List<Task> templist;
+                    /*List<Task> templist;
                     templist = datasource.getTasksByAssignmentId(assignmentId);
                     int complete=1;
                     for(int i =0;i<templist.size();i++){
                         if(templist.get(i).getState()!=1){
                         complete=0;
                         }
-                    }
-                    if(complete==1) {
+                    }*/
+                    //if(complete==1) {
                         assignment.setState(2);
                         datasource.updateAssignment(assignment);
                         Toast.makeText(getApplicationContext(), assignment.getState().toString(),
@@ -117,8 +117,8 @@ public class AssTasksActivity extends Activity{
                         PendingIntent.getBroadcast(this, assignment.getDueDate().intValue(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT).cancel();
 
 
-                    }
-                    else{
+                    //}
+                    /*else{
                         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                         alertDialog.setTitle("Alert");
                         alertDialog.setMessage("Some tasks are not checked. Please check all tasks before closing the assignment.");
@@ -129,7 +129,7 @@ public class AssTasksActivity extends Activity{
                                     }
                                 });
                         alertDialog.show();
-                    }
+                    }*/
                 }
                 return true;
             case R.id.help_task:
