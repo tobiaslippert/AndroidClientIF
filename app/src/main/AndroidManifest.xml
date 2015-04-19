@@ -17,7 +17,8 @@
 
         <activity
             android:name=".Presentation_Layer.LoginActivity"
-            android:label="Inspection Framework" >
+            android:label="Inspection Framework"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,12 +27,14 @@
         </activity>
         <activity
             android:name=".Presentation_Layer.MainActivity"
-            android:label="Menu" >
+            android:label="Menu"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity
             android:name=".Presentation_Layer.MyAssignmentsActivity"
-            android:label="Assignments" >
+            android:label="Assignments"
+            android:screenOrientation="portrait">
 
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -39,17 +42,20 @@
 
         <activity
             android:name=".Presentation_Layer.AssTasksActivity"
-            android:label="Tasks">
+            android:label="Tasks"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".Presentation_Layer.TaskAttachActivity"
-            android:label="Task Attachment">
+            android:label="Task Attachment"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".Presentation_Layer.AssignmentDetailsActivity"
-            android:label="Assignment Details">
+            android:label="Assignment Details"
+            android:screenOrientation="portrait">
         </activity>
         <receiver android:name=".Presentation_Layer.NotificationPublisher" />
     </application>
