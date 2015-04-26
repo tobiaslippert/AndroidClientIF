@@ -64,6 +64,8 @@ public class SynchronizationHelper {
 
                 for (int i = 0; i < listWithAllAssignmentsByUser.size(); i++) {
                     Assignment assignment = listWithAllAssignmentsByUser.get(i);
+
+
                     User user = datasource.getUserByUserId(userId);
                     InspectionObject inspectionObject = datasource.getInspectionObjectById(assignment.getInspectionObjectId());
 
@@ -72,6 +74,7 @@ public class SynchronizationHelper {
                     putJObject = parser.completeAssignmentToJson(assignment, taskList, user, inspectionObject);
                     System.out.println(putJObject);
                     Integer statusResponse = restInstance.putToHerokuServer("assignment", putJObject, assignment.getId());
+                    System.out.println("PUT:"+statusResponse);
 
                     // Gives the user to the choice to delete or keep the local
                     // version if upload is not possible due to version problems
@@ -136,6 +139,7 @@ public class SynchronizationHelper {
                     assignment.setDescription(jObject.get("description").toString());
                     assignment.setAssignmentName(jObject.get("assignmentName").toString());
                     assignment.setId(jObject.get("id").toString());
+                    assignment.setIsTemplate((jObject.get("isTemplate").toString()));
                     assignment.setStartDate(jObject.getLong("startDate"));
                     assignment.setDueDate(jObject.getLong("endDate"));
                     assignment.setInspectionObjectId(jObject.get("isTemplate").toString());

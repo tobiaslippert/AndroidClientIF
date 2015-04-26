@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
@@ -35,9 +36,13 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,7 +99,7 @@ public class HttpCustomClient {
             HttpResponse response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
             int statusCode = statusLine.getStatusCode();
-            System.out.println(statusCode);
+            System.out.println("GET:" +statusCode);
             if (statusCode == 200) {
                 HttpEntity entity = response.getEntity();
                 InputStream content = entity.getContent();
@@ -111,6 +116,7 @@ public class HttpCustomClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return builder.toString();
 
     }
@@ -138,11 +144,11 @@ public class HttpCustomClient {
 
             StatusLine statusLine = response.getStatusLine();
             int statusCode = statusLine.getStatusCode();
-            System.out.println(statusCode);
-            System.out.println(response);
+            System.out.println("POST:"+statusCode);
+            System.out.println("POST Response:" +response);
             if (statusCode == 200) {
                 status = true;
-                //CookieStore store = ((DefaultHttpClient) client).getCookieStore();
+
                 List<Cookie> cookies = store.getCookies();
 
                 if (cookies != null) {
@@ -153,12 +159,14 @@ public class HttpCustomClient {
                 }
 
                 HttpEntity entity = response.getEntity();
+
                 InputStream content = entity.getContent();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(content));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
+                entity.consumeContent();
             } else {
                 Log.e(ParseJSON.class.toString(), "Download not possible!");
                 status = false;
@@ -222,6 +230,7 @@ public class HttpCustomClient {
                     stringBuilder.append(line);
                     System.out.println(line);
                 }
+                client.getConnectionManager().shutdown();
             } else {
                 Log.e(ParseJSON.class.toString(), "Upload not possible!");
 
@@ -238,39 +247,51 @@ public class HttpCustomClient {
     //Receives the URI where the object should be put at and the String
     //Should be used than an existing object of the server database should be updated
     public Integer putToHerokuServer(String uri, String jsonObject, String Id){
-        JSONObject jO;
-
+        //JSONObject jO;
+        String name = null;
+        String value = null;
         //Allow internet connection
         StrictMode.ThreadPolicy policy = new StrictMode.
         ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         //set URL for Put-request
-        HttpPut httpPut = new HttpPut("https://inspection-framework.herokuapp.com/"+uri+Id);
+        HttpPut httpPut = new HttpPut("https://inspection-framework.herokuapp.com/"+uri+"/"+Id);
+        //store.clear();
+        client.getConnectionManager().closeExpiredConnections();
+
+
 
         //Create a new JSONObject from the given String
         try {
-            jO = new JSONObject(jsonObject);
+            //jO = new JSONObject(jsonObject);
             //passes the results to a string builder/entity
-            try {
-                StringEntity se = new StringEntity(jO.toString());
-                httpPut.setEntity(se);
+
+                StringEntity se = new StringEntity(jsonObject);
+
                 //sets a request header so the page receving the request
                 //will know what to do with it
+                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPut.setHeader("Accept", "application/json");
                 httpPut.setHeader("Content-type", "application/json");
-                try {
+
+                client.getConnectionManager().closeExpiredConnections();
+                httpPut.setEntity(se);
+
+            try {
                    response = client.execute(httpPut);
+                System.out.println("PUT Response:"+response);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
         return (Integer) response.getStatusLine().getStatusCode();
     }
+
+
 
 
 }

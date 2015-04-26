@@ -22,13 +22,13 @@ public class ParseJSON {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", user.getUserId());
-            jsonObject.put("userName", user.getUserName());
+            /*jsonObject.put("userName", user.getUserName());
             jsonObject.put("emailAddress", user.getEmail());
             jsonObject.put("role", user.getRole());
             jsonObject.put("firstName", user.getFirstName());
             jsonObject.put("lastName", user.getLastName());
             jsonObject.put("phoneNumber", user.getPhoneNumber());
-            jsonObject.put("mobileNumber", user.getMobileNumber());
+            jsonObject.put("mobileNumber", user.getMobileNumber());*/
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -41,11 +41,11 @@ public class ParseJSON {
         JSONObject jsonObjectInspectionObject = new JSONObject();
         try {
             jsonObjectInspectionObject.put("id", inspectionObject.getId());
-            jsonObjectInspectionObject.put("objectName", inspectionObject.getObjectName());
+            /*jsonObjectInspectionObject.put("objectName", inspectionObject.getObjectName());
             jsonObjectInspectionObject.put("description", inspectionObject.getDescription());
             jsonObjectInspectionObject.put("location", inspectionObject.getLocation());
             jsonObjectInspectionObject.put("customerName", inspectionObject.getCustomerName());
-            jsonObjectInspectionObject.put("attachmentIds", null);
+            jsonObjectInspectionObject.put("attachmentIds", null);*/
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class ParseJSON {
             jsonObjectAssignment.put("id", assignment.getId());
             jsonObjectAssignment.put("assignmentName", assignment.getAssignmentName());
             jsonObjectAssignment.put("description", assignment.getDescription());
-            jsonObjectAssignment.put("isTemplate", assignment.getIsTemplate());
+            //jsonObjectAssignment.put("isTemplate", assignment.getIsTemplate());
             jsonObjectAssignment.put("state", assignment.getState());
             jsonObjectAssignment.put("tasks", jsonArrayTasks);
             jsonObjectAssignment.put("startDate", assignment.getStartDate());

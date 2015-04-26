@@ -86,6 +86,7 @@ public class AssTasksActivity extends Activity{
                             //Toast.LENGTH_LONG).show();
                     setOptionTitle();
                     listenAdapter.notifyDataSetChanged();
+                    System.out.println(assignment);
                 }
                 else{
                     /*List<Task> templist;
