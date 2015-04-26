@@ -252,6 +252,7 @@ public class HttpCustomClient {
     public Integer putToHerokuServer(String uri, String jsonObject, String Id){
         //JSONObject jO;
         String name = null;
+        HttpResponse response1 = null;
         String value = null;
         //Allow internet connection
         StrictMode.ThreadPolicy policy = new StrictMode.
@@ -259,39 +260,46 @@ public class HttpCustomClient {
         StrictMode.setThreadPolicy(policy);
 
         //set URL for Put-request
-        HttpPut httpPut = new HttpPut("https://inspection-framework.herokuapp.com/"+uri+"/"+Id);
+        System.out.println("ID:"+Id);
+        HttpPut httpPut = new HttpPut("http://inspection-framework.herokuapp.com/"+uri+"/"+Id);
+
         //store.clear();
-        client.getConnectionManager().closeExpiredConnections();
 
 
-
-        //Create a new JSONObject from the given String
+        StringEntity se = null;
         try {
-            //jO = new JSONObject(jsonObject);
-            //passes the results to a string builder/entity
+            se = new StringEntity(jsonObject, HTTP.UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-                StringEntity se = new StringEntity(jsonObject);
-
-                //sets a request header so the page receving the request
+        //sets a request header so the page receving the request
                 //will know what to do with it
-                /*se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                //se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPut.setHeader("Accept", "application/json");
-                httpPut.setHeader("Content-type", "application/json");*/
+                httpPut.setHeader("Content-type", "application/json");
 
                 client.getConnectionManager().closeExpiredConnections();
                 httpPut.setEntity(se);
+                //String-Builder for output String
+                //StringBuilder builder = new StringBuilder();
 
             try {
-                   response = client.execute(httpPut);
-                System.out.println("PUT Response:"+response);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (UnsupportedEncodingException e) {
+                response1 = client.execute(httpPut);
+                StatusLine statusLine = response1.getStatusLine();
+                int statusCode = statusLine.getStatusCode();
+
+
+
+
+
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        return (Integer) response.getStatusLine().getStatusCode();
+        return (Integer) response1.getStatusLine().getStatusCode();
     }
 
 
