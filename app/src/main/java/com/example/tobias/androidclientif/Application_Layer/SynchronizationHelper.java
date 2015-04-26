@@ -78,7 +78,7 @@ public class SynchronizationHelper {
 
                     // Gives the user to the choice to delete or keep the local
                     // version if upload is not possible due to version problems
-                    if (statusResponse == 400) {
+                   /* if (statusResponse == 400) {
                         boolean userChoice = alertDialogHandler(assignment.getAssignmentName() + ": Version error", "A versioning error occured. Which version should be kept on this device? If the assignment is already finished, the remote version won't be downloaded.", activity);
 
                         // Keep local version
@@ -95,7 +95,7 @@ public class SynchronizationHelper {
 
                     if (statusResponse == 200){
                         uploadReady = true;
-                    }
+                    }*/
 
                     // Deletes all local instances in the database
                     datasource.deleteInspectionObject(assignment.getInspectionObjectId());
@@ -111,7 +111,7 @@ public class SynchronizationHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            restInstance.client.getConnectionManager().closeExpiredConnections();
             // DOWNLOAD-PART
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

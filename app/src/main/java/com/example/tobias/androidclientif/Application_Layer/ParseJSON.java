@@ -90,7 +90,7 @@ public class ParseJSON {
             jsonObjectAssignment.put("id", assignment.getId());
             jsonObjectAssignment.put("assignmentName", assignment.getAssignmentName());
             jsonObjectAssignment.put("description", assignment.getDescription());
-            //jsonObjectAssignment.put("isTemplate", assignment.getIsTemplate());
+            jsonObjectAssignment.put("isTemplate", false);
             jsonObjectAssignment.put("state", assignment.getState());
             jsonObjectAssignment.put("tasks", jsonArrayTasks);
             jsonObjectAssignment.put("startDate", assignment.getStartDate());

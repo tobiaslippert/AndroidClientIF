@@ -104,13 +104,15 @@ public class HttpCustomClient {
                 HttpEntity entity = response.getEntity();
                 InputStream content = entity.getContent();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+
                 String line;
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
-                }
+                }content.close();
             } else {
                 Log.e(ParseJSON.class.toString(), "Download not possible!");
             }
+
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -162,6 +164,7 @@ public class HttpCustomClient {
 
                 InputStream content = entity.getContent();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                content.close();
                 String line;
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
@@ -271,9 +274,9 @@ public class HttpCustomClient {
 
                 //sets a request header so the page receving the request
                 //will know what to do with it
-                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                /*se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPut.setHeader("Accept", "application/json");
-                httpPut.setHeader("Content-type", "application/json");
+                httpPut.setHeader("Content-type", "application/json");*/
 
                 client.getConnectionManager().closeExpiredConnections();
                 httpPut.setEntity(se);
