@@ -93,7 +93,7 @@ public class SynchronizationHelper {
 
                     // Gives the user to the choice to delete or keep the local
                     // version if upload is not possible due to version problems
-                   /*if (statusResponse == 400) {
+                   if (statusResponse == 400) {
                         boolean userChoice = alertDialogHandler(assignment.getAssignmentName() + ": Version error", "A versioning error occured. Which version should be kept on this device? If the assignment is already finished, the remote version won't be downloaded.", activity);
 
                         // Keep local version
@@ -106,7 +106,7 @@ public class SynchronizationHelper {
                         if (userChoice == false) {
                             // Continue with program
                         }
-                    }*/
+                    }
 
                     if (statusResponse == 204){
                         uploadReady = true;
@@ -220,16 +220,40 @@ public class SynchronizationHelper {
                     // Store all assigned tasks into the database
                     List<Assignment> assignmentList = new ArrayList<>();
                     assignmentList = datasource.getAllAssignments();
+                    int state = 0;
+
                     for (int m=0; m<assignmentList.size(); m++){
                         Assignment assignment1 = new Assignment();
                         assignment1 = assignmentList.get(m);
-                        if (assignment.getId().equals(assignment1.getId())){
-                            datasource.updateAssignment(assignment);
-                        }
 
+                        if (assignment.getId().equals(assignment1.getId())){
+                        state = 1;
+                        for (int b = 0; b < noSyncList.size(); b++){
+                            String noSyncedId = noSyncList.get(b);
+                            if (assignment.getId().equals(noSyncedId)) {
+                                assignment1.setVersion(assignment.getVersion());
+                                datasource.updateAssignment(assignment1);
+                                state = 2;
+
+                            }
+                            if (state == 2){
+                                break;
+                        }
                     }
-                    datasource.createAssignment(assignment);
+
+
+
                 }
+                    //Handles accorcing to the state
+                    if (state == 1){
+                        datasource.updateAssignment(assignment);
+                        break;
+                    }
+               }
+                    if(state==0){
+                        datasource.createAssignment(assignment);
+                    }
+              }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -284,59 +308,5 @@ public class SynchronizationHelper {
         return mResult;
     }
 
-    public String UserLogin(Context ctx, String username, String password) {
 
-        datasource = new MySQLiteHelper(ctx);
-        restInstance = new HttpCustomClient();
-        icd = new InternetConnectionDetector(ctx);
-        String userId = "0";
-
-        if (icd.isConnectedToInternet() == true) {
-
-            if (restInstance.postToHerokuServer("login", username, password) == true) {
-
-                try {
-
-                    JSONObject jObject = new JSONObject(restInstance.readHerokuServer("users/byusername/" + username));
-
-                    User user = new User();
-
-                    // Only ROLE_INSPECTOR users can log in
-                    if (!(jObject.get("role").toString()).equals("ROLE_INSPECTOR")) {
-                        Toast errorToast = Toast.makeText(ctx, "Only Inspectors can login at this client", Toast.LENGTH_SHORT);
-                        errorToast.show();
-
-                    } else {
-
-                        // get and set the values for the table user
-                        user.setUserId(jObject.get("id").toString());
-                        user.setUserName(jObject.get("userName").toString());
-                        user.setFirstName(jObject.get("firstName").toString());
-                        user.setLastName(jObject.get("lastName").toString());
-                        user.setRole(jObject.get("role").toString());
-                        user.setEmail(jObject.get("emailAddress").toString());
-                        user.setPhoneNumber(jObject.get("phoneNumber").toString());
-                        user.setMobileNumber(jObject.get("mobileNumber").toString());
-
-                        userId = user.getUserId();
-
-                        datasource.createUser(user);
-                        datasource.close();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } else {
-                Toast errorToast = Toast.makeText(ctx, "Wrong username or password", Toast.LENGTH_SHORT);
-                errorToast.show();
-            }
-        } else {
-            Toast errorToast = Toast.makeText(ctx, R.string.toast_no_internet, Toast.LENGTH_SHORT);
-            errorToast.show();
-
-        }
-        return userId;
-    }
 }
