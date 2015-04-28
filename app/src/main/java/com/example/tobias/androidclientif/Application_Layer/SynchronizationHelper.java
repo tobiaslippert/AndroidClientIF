@@ -20,6 +20,7 @@ import android.widget.Toast;
 import android.net.NetworkInfo;
 
 import com.example.tobias.androidclientif.Entities.Assignment;
+import com.example.tobias.androidclientif.Entities.Attachment;
 import com.example.tobias.androidclientif.Entities.InspectionObject;
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Entities.User;
@@ -72,15 +73,27 @@ public class SynchronizationHelper {
                     InspectionObject inspectionObject = datasource.getInspectionObjectById(assignment.getInspectionObjectId());
 
                     List<Task> taskList = datasource.getTasksByAssignmentId(assignment.getId());
-
+                    //Upload the assignment with all related tasks
                     putJObject = parser.completeAssignmentToJson(assignment, taskList, user, inspectionObject);
                     System.out.println(putJObject);
                     Integer statusResponse = restInstance.putToHerokuServer("assignment", putJObject, assignment.getId());
                     System.out.println("PUT:"+statusResponse);
 
+                    //Post all attachments related to an assignment
+                    List<Attachment> attachmentList = new ArrayList<>();
+                    attachmentList = datasource.getAttachmentsByAssignmentId(assignment.getId());
+
+                    if(attachmentList != null) {
+                        for (int j = 0; j < attachmentList.size(); j++) {
+                            Attachment attachment = attachmentList.get(j);
+                            restInstance.postAttachmentToHerokuServer(assignment.getId(), attachment.getTaskId(), attachment.getBinaryObject());
+                        }
+                    }
+
+
                     // Gives the user to the choice to delete or keep the local
                     // version if upload is not possible due to version problems
-                   if (statusResponse == 400) {
+                   /*if (statusResponse == 400) {
                         boolean userChoice = alertDialogHandler(assignment.getAssignmentName() + ": Version error", "A versioning error occured. Which version should be kept on this device? If the assignment is already finished, the remote version won't be downloaded.", activity);
 
                         // Keep local version
@@ -93,20 +106,23 @@ public class SynchronizationHelper {
                         if (userChoice == false) {
                             // Continue with program
                         }
-                    }
+                    }*/
 
                     if (statusResponse == 204){
                         uploadReady = true;
                     }
 
-                    // Deletes all local instances in the database
-                    datasource.deleteInspectionObject(assignment.getInspectionObjectId());
-                    datasource.deleteAssignment(assignment.getId());
-
-                    for (int j = 0; j < taskList.size(); j++) {
-                        Task task = taskList.get(j);
-                        datasource.deleteTask(task.getId());
+                    // Deletes all local instances in the database only when the assignment is final (state 2)
+                    if (assignment.getState() == 2) {
+                        datasource.deleteInspectionObject(assignment.getInspectionObjectId());
+                        datasource.deleteAssignment(assignment.getId());
+                        for (int j = 0; j < taskList.size(); j++) {
+                            Task task = taskList.get(j);
+                            datasource.deleteTask(task.getId());
+                        }
                     }
+
+
                 }
 
 
@@ -172,6 +188,17 @@ public class SynchronizationHelper {
                         task.setErrorDescription(jObjectTask.get("errorDescription").toString());
 
                         // Store all assigned tasks into the database
+                        List<Task> taskList = new ArrayList<>();
+                        taskList = datasource.getTasksByAssignmentId(assignment.getId());
+                        for (int m=0; m<taskList.size(); m++){
+                            Task task1 = new Task();
+                            task1 = taskList.get(m);
+                            if (task.getId().equals(task1.getId())){
+                                datasource.deleteTask(task1.getId());
+
+                            }
+                        }
+
                         datasource.createTask(task);
                     }
 
@@ -190,6 +217,17 @@ public class SynchronizationHelper {
                     assignment.setInspectionObjectId(inspectionObject.getId());
 
                     // Store all assignments into the database
+                    // Store all assigned tasks into the database
+                    List<Assignment> assignmentList = new ArrayList<>();
+                    assignmentList = datasource.getAllAssignments();
+                    for (int m=0; m<assignmentList.size(); m++){
+                        Assignment assignment1 = new Assignment();
+                        assignment1 = assignmentList.get(m);
+                        if (assignment.getId().equals(assignment1.getId())){
+                            datasource.updateAssignment(assignment);
+                        }
+
+                    }
                     datasource.createAssignment(assignment);
                 }
 

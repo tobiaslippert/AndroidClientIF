@@ -358,11 +358,13 @@ package com.example.tobias.androidclientif.Persistence_Layer;
                     new String[] { String.valueOf(assignment.getId()) });
         }
 
-        //Delete an assignment
+        //Delete an assignment with all related tasks
         public void deleteAssignment(String assignmentId) {
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete(TABLE_ASSIGNMENTS, A_COLUMN_ASSIGNMENT_ID + " = ?",
                     new String[] { String.valueOf(assignmentId) });
+            db.delete(TABLE_TASKS, T_COLUMN_PK + " = ?",
+                    new String [] { String.valueOf(assignmentId)});
         }
 
         //RUD-Methods for inspectionObjects
