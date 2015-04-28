@@ -25,6 +25,7 @@ import com.example.tobias.androidclientif.Entities.InspectionObject;
 import com.example.tobias.androidclientif.Entities.Task;
 import com.example.tobias.androidclientif.Entities.User;
 import com.example.tobias.androidclientif.Persistence_Layer.MySQLiteHelper;
+import com.example.tobias.androidclientif.Presentation_Layer.MainActivity;
 import com.example.tobias.androidclientif.R;
 
 
@@ -79,27 +80,18 @@ public class SynchronizationHelper {
                     Integer statusResponse = restInstance.putToHerokuServer("assignment", putJObject, assignment.getId());
                     System.out.println("PUT:"+statusResponse);
 
-                    //Post all attachments related to an assignment
-                    List<Attachment> attachmentList = new ArrayList<>();
-                    attachmentList = datasource.getAttachmentsByAssignmentId(assignment.getId());
-
-                    if(attachmentList != null) {
-                        for (int j = 0; j < attachmentList.size(); j++) {
-                            Attachment attachment = attachmentList.get(j);
-                            restInstance.postAttachmentToHerokuServer(assignment.getId(), attachment.getTaskId(), attachment.getBinaryObject());
-                        }
-                    }
-
-
                     // Gives the user to the choice to delete or keep the local
                     // version if upload is not possible due to version problems
                    if (statusResponse == 400) {
-                        boolean userChoice = alertDialogHandler(assignment.getAssignmentName() + ": Version error", "A versioning error occured. Which version should be kept on this device? If the assignment is already finished, the remote version won't be downloaded.", activity);
+                       System.out.println("YEAH!");
 
+
+                        boolean userChoice = alertDialogHandler(assignment.getAssignmentName() + ": Version error", "A versioning error occured. Which version should be kept on this device? If the assignment is already finished, the remote version won't be downloaded.", activity);
+                        System.out.println("Here we go");
                         // Keep local version
                         if (userChoice == true) {
                             noSyncList.add(assignment.getId());
-                            continue;
+
                         }
 
                         // Download remote version
@@ -109,6 +101,16 @@ public class SynchronizationHelper {
                     }
 
                     if (statusResponse == 204){
+                        //Post all attachments related to an assignment
+                        List<Attachment> attachmentList = new ArrayList<>();
+                        attachmentList = datasource.getAttachmentsByAssignmentId(assignment.getId());
+
+                        if(attachmentList != null) {
+                            for (int j = 0; j < attachmentList.size(); j++) {
+                                Attachment attachment = attachmentList.get(j);
+                                restInstance.postAttachmentToHerokuServer(assignment.getId(), attachment.getTaskId(), attachment.getBinaryObject());
+                            }
+                        }
                         uploadReady = true;
                     }
 
@@ -124,7 +126,7 @@ public class SynchronizationHelper {
 
 
                 }
-
+            System.out.println("Nicht gesynct: "+noSyncList);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -149,7 +151,7 @@ public class SynchronizationHelper {
                     // Filters the input stream: Don't pick templates,
                     // finished assignments and assignments that don't get
                     // updated
-                    if (jObject.get("isTemplate").toString() == "true" || jObject.getInt("state") == 2 || noSyncList.contains(jObject.get("id").toString())) {
+                    if (jObject.get("isTemplate").toString() == "true" || jObject.getInt("state") == 2) {
                         continue;
                     }
 
@@ -221,6 +223,7 @@ public class SynchronizationHelper {
                     List<Assignment> assignmentList = new ArrayList<>();
                     assignmentList = datasource.getAllAssignments();
                     int state = 0;
+                    System.out.println("Status: 0");
 
                     for (int m=0; m<assignmentList.size(); m++){
                         Assignment assignment1 = new Assignment();
@@ -228,6 +231,7 @@ public class SynchronizationHelper {
 
                         if (assignment.getId().equals(assignment1.getId())){
                         state = 1;
+                            System.out.println("Status: 1");
                         for (int b = 0; b < noSyncList.size(); b++){
                             String noSyncedId = noSyncList.get(b);
                             if (assignment.getId().equals(noSyncedId)) {
@@ -237,6 +241,7 @@ public class SynchronizationHelper {
 
                             }
                             if (state == 2){
+                                System.out.println("Status: 2");
                                 break;
                         }
                     }

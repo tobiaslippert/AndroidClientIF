@@ -188,7 +188,7 @@ public class MainActivity extends Activity {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(MainActivity.this);
 
 
-                    dlgAlert.setMessage("No internet connexion");
+                    dlgAlert.setMessage("No internet connecion");
                     dlgAlert.setTitle("Error Message...");
                     dlgAlert.setPositiveButton("OK", null);
                     dlgAlert.setCancelable(true);
@@ -202,16 +202,16 @@ public class MainActivity extends Activity {
                             });
                 } else
                 {
-                    pd.show();
+                /*    pd.show();
                 new Thread() {
                     public void run() {
 
                         try {
                             sleep(1000);
-
+*/
                             synchronizationHelper = new SynchronizationHelper();
                             synchronizationHelper.SynchronizeAssignments(getApplicationContext(), user.getUserId(), MainActivity.this);
-
+/*
                         } catch (Exception e) {
                             Log.e("tag", e.getMessage());
                         }
@@ -219,6 +219,7 @@ public class MainActivity extends Activity {
                         pd.dismiss();
                     }
                 }.start();
+        */
             }
             }}
             );
