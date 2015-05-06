@@ -80,7 +80,7 @@ public class TaskAttachActivity extends Activity {
             Problem_Desc.setText(task.getErrorDescription());
         }
 
-        //if(datasource.getAttachmentPhotoByTaskId(taskId).length!=0){
+
         try{
             byte[] B = datasource.getAttachmentPhotoByTaskId(taskId);
             Bitmap bitmap = BitmapFactory.decodeByteArray(B, 0, B.length);
@@ -89,11 +89,10 @@ public class TaskAttachActivity extends Activity {
         } catch (Exception e) {
         e.printStackTrace();
             NoPic=1;
-            //Toast.makeText(getApplicationContext(), "problem encountred no pic "+NoPic,
-                    //Toast.LENGTH_LONG).show();
+
     }
 
-        //Butt = (Button)findViewById(R.id.button_Pic);
+
         if(assignment.getState()!=2) {
             IMG.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,7 +117,7 @@ public class TaskAttachActivity extends Activity {
                 if (Clicked == 1&&Problem_Desc.getText().length()!=0) {
 
                     //The imagebitmap is transferred to byte[] before storing it to the database
-                    //byte[] array = bitmapUtility.getBytes(imageBitmap);
+
                     IMG.buildDrawingCache();
                     Bitmap bmap = IMG.getDrawingCache();
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -138,9 +137,7 @@ public class TaskAttachActivity extends Activity {
                     else{
                         datasource.deleteAttachment(taskId);
                         datasource.createAttachment(attachment);
-                        //Attachment exatt = datasource.getAttachmentsByTaskId(taskId);
-                        //exatt.setBinaryObject(array);
-                        //datasource.updateAttachment(exatt);
+
                         Toast.makeText(getApplicationContext(), "Attachment updated ",
                                 Toast.LENGTH_LONG).show();
                     }
@@ -190,13 +187,9 @@ public class TaskAttachActivity extends Activity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            //Bundle extras = data.getExtras();
-            //imageBitmap = (Bitmap) extras.get("data");
-            //System.out.println(imageBitmap.toString());
-            //IMG.setImageBitmap(imageBitmap);
+
             setPic();
-            //Toast.makeText(getApplicationContext(), "Image Path: "+mCurrentPhotoPath,
-                    //Toast.LENGTH_LONG).show();
+
             Clicked=1;
         }
     }

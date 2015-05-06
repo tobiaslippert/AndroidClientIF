@@ -79,16 +79,7 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
             }
         });
 
-        /*listViewMyAss.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
-            @Override
-            public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id)
-            {
-                Assignment clickedAssignment = listenAdapter.getClickedAssignment(pos);
-                Toast.makeText(getApplicationContext(), "long clicked task is "+clickedAssignment.getAssignmentName(),
-                        Toast.LENGTH_LONG).show();
-                return true;
-            }
-        });*/
+
     }
 
     @Override
@@ -153,12 +144,7 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
                         .setSmallIcon(R.drawable.if_gold_logo)
                         .build();
                 scheduleNotification(noti, 10000, clickedAssignment2.getDueDate().intValue());
-                /*
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, noti);*/
 
-                //
 
                 return true;
 
@@ -183,24 +169,17 @@ public class MyAssignmentsActivity extends Activity implements SearchView.OnQuer
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.sort:
-                /*;
-                for(int i=0; i<listWithAllStoredAssignments.size();i++){
-                }*/
+
                 if(checksort==0){
-                    //List<Assignment> Sorted = listWithAllStoredAssignments;
+
                     Collections.sort(listWithAllStoredAssignments, new CustomComparator());
-                    //listenAdapter = new CustomAdapter_Assignment(this, Sorted);
-                    //listViewMyAss.setAdapter(listenAdapter);
+
                     listenAdapter.notifyDataSetChanged();
                     item.setTitle("Unsort");
                     checksort=1;
                 }
                 else{
-                    /*listenAdapter = new CustomAdapter_Assignment(this, listWithAllStoredAssignments);
-                    listViewMyAss.setAdapter(listenAdapter);
-                    listenAdapter.notifyDataSetChanged();
-                    item.setTitle("Sort by due date");
-                    checksort=0;*/
+
                     finish();
                     startActivity(getIntent());
                 }

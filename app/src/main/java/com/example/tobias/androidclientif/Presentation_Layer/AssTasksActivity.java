@@ -62,17 +62,7 @@ public class AssTasksActivity extends Activity{
         listViewAssTasks.setAdapter(listenAdapter);
         registerForContextMenu(listViewAssTasks);
 
-        /*listViewAssTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Task clickedTask = listenAdapter.getClickedTask(position);
-                Intent openTaskAttach = new Intent(getApplicationContext(), TaskAttachActivity.class);
-                openTaskAttach.putExtra("TaskName", clickedTask.getTaskName());
-                openTaskAttach.putExtra("TaskId", clickedTask.getId());
-                openTaskAttach.putExtra("AssignmentId", assignmentId);
-                startActivity(openTaskAttach);
-            }
-        });*/
+
     }
 
     @Override
@@ -89,19 +79,10 @@ public class AssTasksActivity extends Activity{
                     System.out.println(assignment);
                 }
                 else{
-                    /*List<Task> templist;
-                    templist = datasource.getTasksByAssignmentId(assignmentId);
-                    int complete=1;
-                    for(int i =0;i<templist.size();i++){
-                        if(templist.get(i).getState()!=1){
-                        complete=0;
-                        }
-                    }*/
-                    //if(complete==1) {
+
                         assignment.setState(2);
                         datasource.updateAssignment(assignment);
-                        //Toast.makeText(getApplicationContext(), assignment.getState().toString(),
-                                //Toast.LENGTH_LONG).show();
+
                         setOptionTitle();
                         listenAdapter.notifyDataSetChanged();
 
@@ -118,19 +99,8 @@ public class AssTasksActivity extends Activity{
                         PendingIntent.getBroadcast(this, assignment.getDueDate().intValue(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT).cancel();
 
 
-                    //}
-                    /*else{
-                        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                        alertDialog.setTitle("Alert");
-                        alertDialog.setMessage("Some tasks are not checked. Please check all tasks before closing the assignment.");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
-                    }*/
+
+
                 }
                 return true;
             case R.id.help_task:
@@ -202,30 +172,6 @@ public class AssTasksActivity extends Activity{
 
 
 
-    /*@Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        int pos = listViewAssTasks.getPositionForView(buttonView);
-
-        if (pos != ListView.INVALID_POSITION) {
-            Task t = taskList.get(pos);
-            if(t.getState()==1) {
-                t.setState(0);
-                datasource.updateTask(t);
-                Toast.makeText(getApplicationContext(), "state 0 set",
-                        Toast.LENGTH_LONG).show();
-            }
-            else{
-                t.setState(1);
-                datasource.updateTask(t);
-                Toast.makeText(getApplicationContext(), "state 1 set",
-                        Toast.LENGTH_LONG).show();
-            }
-
-            Toast T;
-
-        }
-
-        }*/
 
     @Override
     public void onRestart()

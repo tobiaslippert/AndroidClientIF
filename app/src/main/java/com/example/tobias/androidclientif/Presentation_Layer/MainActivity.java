@@ -100,90 +100,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 icd = new InternetConnectionDetector(getApplicationContext());
                 boolean isOnline = icd.isConnectedToInternet();
-                    /*//Download all inspectionObjects from ther server
-                    String inputInspectionObjects = restInstance.readHerokuServer("inspectionobject");
 
-                    try {
-                        JSONArray jsonArray0 = new JSONArray(inputInspectionObjects);
-
-                        for (int y = 0; y < jsonArray0.length(); y++) {
-                            InspectionObject insOb = new InspectionObject();
-                            JSONObject jsonObject0 = jsonArray0.getJSONObject(y);
-
-                            insOb.setId(jsonObject0.get("id").toString());
-                            insOb.setObjectName(jsonObject0.get("objectName").toString());
-                            insOb.setDescription(jsonObject0.get("description").toString());
-                            insOb.setCustomerName(jsonObject0.get("customerName").toString());
-                            insOb.setLocation(jsonObject0.get("location").toString());
-
-                            //store all inspectionObjects into the database
-                            datasource.createInspectionObject(insOb);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    //Download user assignments from the server based on their ids
-
-                    String inputAssignment = restInstance.readHerokuServer("assignment?user_id=" + user.getUserId());
-                    System.out.println(inputAssignment);
-                    try {
-                        JSONArray jArray = new JSONArray(inputAssignment);
-
-                        for (int i = 0; i < jArray.length(); i++) {
-                            Assignment ass = new Assignment();
-                            JSONObject jObject = jArray.getJSONObject(i);
-
-                            if (jObject.get("isTemplate").toString().equals("true")) {
-                                System.out.println("Template!");
-                                continue;
-                            } else {
-                                System.out.println("No Template!");
-                                //get and set the values for the table assignments
-                                ass.setDescription(jObject.get("description").toString());
-                                ass.setAssignmentName(jObject.get("assignmentName").toString());
-                                ass.setId(jObject.get("id").toString());
-                                ass.setStartDate(jObject.getLong("startDate"));
-                                ass.setDueDate(jObject.getLong("endDate"));
-                                ass.setIsTemplate(jObject.get("isTemplate").toString());
-                                ass.setState(jObject.getInt("state"));
-
-                                //Download all tasks assigned to an assignment from the server
-                                //jArrayTask gets the SubJSONObject "tasks"
-                                JSONArray jArrayTask = new JSONArray(jObject.get("tasks").toString());
-
-                                for (int j = 0; j < jArrayTask.length(); j++) {
-                                    Task task = new Task();
-                                    JSONObject jObjectTask = jArrayTask.getJSONObject(j);
-                                    task.setId(jObjectTask.get("id").toString());
-                                    task.setDescription(jObjectTask.get("description").toString());
-                                    if (jObjectTask.isNull("state")) {
-                                        task.setState(0);
-                                    } else {
-                                        task.setState(jObjectTask.getInt("state"));
-                                    }
-                                    task.setTaskName(jObjectTask.get("taskName").toString());
-                                    task.setAssignmentId(ass.getId());
-
-                                    //Store all assigned tasks into the database
-                                    datasource.createTask(task);
-                                }
-
-                                JSONObject jObjectInspectionObject = new JSONObject(jObject.get("inspectionObject").toString());
-                                ass.setInspectionObjectId(jObjectInspectionObject.get("id").toString());
-
-                                JSONObject jObjectUser = new JSONObject(jObject.get("user").toString());
-                                ass.setUserId(jObjectUser.get("id").toString());
-                                //Store all assignments into the database
-                                datasource.createAssignment(ass);
-
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-            */
                 if (isOnline==false) {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(MainActivity.this);
 
@@ -227,11 +144,7 @@ public class MainActivity extends Activity {
 
 
 
-    /*@Override
-    protected void onResume() {
-        datasource.open();
-        super.onResume();
-    }*/
+
 
     @Override
     protected void onPause() {

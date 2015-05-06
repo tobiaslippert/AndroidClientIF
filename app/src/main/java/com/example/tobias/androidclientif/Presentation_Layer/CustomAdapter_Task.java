@@ -144,59 +144,6 @@ public class CustomAdapter_Task extends BaseAdapter {
                 datasource.updateTask(Ta);
             }
         });
-        //CB.setOnCheckedChangeListener((AssTasksActivity) context);
-        /*CB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datasource = new MySQLiteHelper((AssTasksActivity) context);
-                final Task Ta = task;
-
-                if(Ta.getState()==1){
-
-                    Ta.setState(0);
-
-                    if(!Ta.getErrorDescription().isEmpty()) {
-                        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
-                        dlgAlert.setMessage("This task has an error linked.\nDo you want to delete the error information?");
-                        dlgAlert.setTitle("Warning...");
-                        dlgAlert.setPositiveButton("No", null);
-                        dlgAlert.setNegativeButton("Yes", null);
-                        dlgAlert.setCancelable(false);
-                        dlgAlert.setPositiveButton("No",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Toast.makeText(context, "No",
-                                                //Toast.LENGTH_LONG).show();
-                                        //Does Nothing
-                                    }
-                                });
-                        dlgAlert.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Ta.setErrorDescription("");
-                                datasource.updateTask(Ta);
-                                datasource.deleteAttachment(Ta.getId());
-
-                                Toast.makeText(context, "Error was deleted",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        });
-                        dlgAlert.create().show();
-
-                    }
-                    datasource.updateTask(Ta);
-                    Toast.makeText(context, "Task unfinished",
-                            Toast.LENGTH_LONG).show();
-
-
-                }
-                else{
-                    Ta.setState(1);
-                    datasource.updateTask(Ta);
-                    Toast.makeText(context, "Task finished",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });*/
 
 
         return convertView;

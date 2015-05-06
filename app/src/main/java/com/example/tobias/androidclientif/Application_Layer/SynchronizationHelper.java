@@ -49,7 +49,7 @@ public class SynchronizationHelper {
 
         datasource = new MySQLiteHelper(ctx);
         restInstance = new HttpCustomClient();
-
+        putrestInstance = new HttpCustomClient();
         icd = new InternetConnectionDetector(ctx);
         uploadReady = false;
         downloadReady = false;
@@ -77,17 +77,19 @@ public class SynchronizationHelper {
                     //Upload the assignment with all related tasks
                     putJObject = parser.completeAssignmentToJson(assignment, taskList, user, inspectionObject);
                     System.out.println(putJObject);
+                    System.out.println(assignment.getState());
                     Integer statusResponse = restInstance.putToHerokuServer("assignment", putJObject, assignment.getId());
                     System.out.println("PUT:"+statusResponse);
+
 
                     // Gives the user to the choice to delete or keep the local
                     // version if upload is not possible due to version problems
                    if (statusResponse == 400) {
-                       System.out.println("YEAH!");
 
 
-                        boolean userChoice = alertDialogHandler(assignment.getAssignmentName() + ": Version error", "A versioning error occured. Which version should be kept on this device? If the assignment is already finished, the remote version won't be downloaded.", activity);
-                        System.out.println("Here we go");
+
+                        boolean userChoice = alertDialogHandler(assignment.getAssignmentName() + ": Version error", "Download new version and overwrite local or keep local?", activity);
+
                         // Keep local version
                         if (userChoice == true) {
                             noSyncList.add(assignment.getId());
@@ -108,7 +110,8 @@ public class SynchronizationHelper {
                         if(attachmentList != null) {
                             for (int j = 0; j < attachmentList.size(); j++) {
                                 Attachment attachment = attachmentList.get(j);
-                                restInstance.postAttachmentToHerokuServer(assignment.getId(), attachment.getTaskId(), attachment.getBinaryObject());
+                                putrestInstance.postAttachmentToHerokuServer(assignment.getId(), attachment.getTaskId(), attachment.getBinaryObject());
+                                System.out.println("Attachments uploaded!");
                             }
                         }
                         uploadReady = true;
@@ -117,10 +120,14 @@ public class SynchronizationHelper {
                     // Deletes all local instances in the database only when the assignment is final (state 2)
                     if (assignment.getState() == 2) {
                         datasource.deleteInspectionObject(assignment.getInspectionObjectId());
+                        System.out.println("IO gelöscht!");
                         datasource.deleteAssignment(assignment.getId());
+
+                        System.out.println("Assignment deleted!");
                         for (int j = 0; j < taskList.size(); j++) {
                             Task task = taskList.get(j);
                             datasource.deleteTask(task.getId());
+                            System.out.println("Task:"+j);
                         }
                     }
 
@@ -132,6 +139,7 @@ public class SynchronizationHelper {
                 e.printStackTrace();
             }
 
+            restInstance.client.getConnectionManager().closeExpiredConnections();
             // DOWNLOAD-PART
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -290,13 +298,13 @@ public class SynchronizationHelper {
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(title);
         alert.setMessage(message);
-        alert.setPositiveButton("Keep local version", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Keep", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mResult = true;
                 handler.sendMessage(handler.obtainMessage());
             }
         });
-        alert.setNegativeButton("Download remote version", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("Download", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mResult = false;
                 handler.sendMessage(handler.obtainMessage());

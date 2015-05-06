@@ -263,7 +263,7 @@ public class HttpCustomClient {
         System.out.println("ID:"+Id);
         HttpPut httpPut = new HttpPut("http://inspection-framework.herokuapp.com/"+uri+"/"+Id);
 
-        //store.clear();
+
 
 
         StringEntity se = null;
@@ -275,19 +275,20 @@ public class HttpCustomClient {
 
         //sets a request header so the page receving the request
                 //will know what to do with it
-                //se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
                 httpPut.setHeader("Accept", "application/json");
                 httpPut.setHeader("Content-type", "application/json");
 
                 client.getConnectionManager().closeExpiredConnections();
                 httpPut.setEntity(se);
-                //String-Builder for output String
-                //StringBuilder builder = new StringBuilder();
+
 
             try {
                 response1 = client.execute(httpPut);
                 StatusLine statusLine = response1.getStatusLine();
+
                 int statusCode = statusLine.getStatusCode();
+
 
 
 
