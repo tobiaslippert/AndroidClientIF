@@ -142,6 +142,7 @@ public class SynchronizationHelper {
             restInstance.client.getConnectionManager().closeExpiredConnections();
             // DOWNLOAD-PART
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            System.out.println("Download Abschnitt gestartet");
 
             String inputAssignment = restInstance.readHerokuServer("assignment?user_id=" + userId);
             if (inputAssignment != null){
@@ -179,7 +180,20 @@ public class SynchronizationHelper {
                     // jArrayTask gets the SubJSONObject "tasks"
 
                     JSONArray jArrayTask = new JSONArray(jObject.get("tasks").toString());
+                    Boolean status = false;
+                    for (int b = 0; b < noSyncList.size(); b++){
+                        String noSyncedId = noSyncList.get(b);
+                        if (assignment.getId().equals(noSyncedId)) {
+                            status = true;
 
+                        }
+                        if (status == true){
+                            System.out.println("Status: TRUE");
+                            break;
+                        }
+                    }
+
+                    if (status==false){
                     for (int j = 0; j < jArrayTask.length(); j++) {
                         Task task = new Task();
                         JSONObject jObjectTask = jArrayTask.getJSONObject(j);
@@ -210,7 +224,8 @@ public class SynchronizationHelper {
                         }
 
                         datasource.createTask(task);
-                    }
+                    }}
+
 
                     JSONObject jObjectInspectionObject = new JSONObject(jObject.get("inspectionObject").toString());
                     InspectionObject inspectionObject = new InspectionObject();
@@ -241,9 +256,11 @@ public class SynchronizationHelper {
                         state = 1;
                             System.out.println("Status: 1");
                         for (int b = 0; b < noSyncList.size(); b++){
+                            System.out.println("Der Abschnitt für Versionprüfung gestartet");
                             String noSyncedId = noSyncList.get(b);
                             if (assignment.getId().equals(noSyncedId)) {
                                 assignment1.setVersion(assignment.getVersion());
+                                System.out.println("Version von ass1:" + assignment1.getVersion());
                                 datasource.updateAssignment(assignment1);
                                 state = 2;
 
