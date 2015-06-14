@@ -37,7 +37,7 @@
 
         <Button
             android:id="@+id/bMyAss"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="120dp"
             android:background="@drawable/my_button"
             android:text="My Assignments"
@@ -55,12 +55,11 @@
 
         <Button
             android:id="@+id/bLog"
-            android:layout_width="158dp"
+            android:layout_width="169dp"
             android:layout_height="130dp"
             android:background="@drawable/my_button"
             android:text="Logout"
-            android:drawableLeft="@drawable/logout"
-            />
+            android:drawableLeft="@drawable/logout" />
 
     </FrameLayout>
 
@@ -74,11 +73,11 @@
 
         <Button
             android:id="@+id/bDown"
-            android:layout_width="155dp"
+            android:layout_width="169dp"
             android:layout_height="130dp"
             android:background="@drawable/my_button"
             android:text="Sync"
-            android:drawableLeft="@drawable/sync_cloud_last"/>
+            android:drawableLeft="@drawable/sync_cloud_last" />
 
     </FrameLayout>
 
